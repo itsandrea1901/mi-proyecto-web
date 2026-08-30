@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes | Joyas Valentina</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #D4AF37; --primary-dark: #b8941f; --primary-light: rgba(212,175,55,0.08);
+            --navy: #1a1a2e; --gray: #666; --gray-light: #999;
+            --white: #ffffff; --danger: #dc3545; --success: #28a745; --info: #0dcaf0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06); --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
+            --radius: 14px; --transition: all 0.25s ease;
+        }
+        body { font-family: 'Poppins', sans-serif; background: #f0f2f5; color: #333; }
+        .dashboard-header { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: var(--navy); display: flex; justify-content: space-between; align-items: center; padding: 0 28px; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+        .header-left { display: flex; align-items: center; gap: 18px; }
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; box-shadow: 0 3px 12px rgba(212,175,55,0.35); }
+        .dashboard-header h1 { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: var(--primary); }
+        .header-right { display: flex; align-items: center; gap: 14px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 40px; cursor: pointer; transition: var(--transition); border: 1px solid rgba(255,255,255,0.1); }
+        .user-profile:hover { background: rgba(255,255,255,0.14); }
+        .profile-info { display: flex; flex-direction: column; }
+        .user-name { font-weight: 600; font-size: 0.85rem; color: white; }
+        .user-role { font-size: 0.7rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .logout-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 40px; color: #ccc; cursor: pointer; transition: var(--transition); font-size: 0.85rem; }
+        .logout-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
+        .foto-perfil { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .foto-perfil-placeholder { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); }
+        .foto-perfil-placeholder i { font-size: 1.3rem; color: var(--primary); }
+        .menu-toggle { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: white; }
+
+        .sidebar { width: 250px; background: #fafafa; border-right: 1px solid #eee; position: fixed; top: 68px; left: 0; bottom: 0; z-index: 999; display: flex; flex-direction: column; }
+        .sidebar-menu { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .menu-item a, .menu-header { display: flex; align-items: center; padding: 11px 18px; color: var(--gray); text-decoration: none; gap: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 500; transition: var(--transition); }
+        .menu-item a i, .menu-header i:first-child { width: 20px; color: var(--primary); }
+        .menu-item a:hover, .menu-header:hover { background: rgba(212,175,55,0.06); color: var(--navy); }
+        .menu-item.active a { background: rgba(212,175,55,0.12); color: var(--navy); border-left: 3px solid var(--primary); font-weight: 600; }
+        .menu-arrow { margin-left: auto; transition: transform 0.3s; font-size: 0.7rem; }
+        .menu-header.active .menu-arrow { transform: rotate(180deg); }
+        .submenu { max-height: 0; overflow: hidden; background: #f5f5f5; transition: max-height 0.3s ease-out; }
+        .submenu.active { max-height: 500px; }
+        .submenu-item { display: flex; align-items: center; padding: 9px 18px 9px 48px; color: var(--gray-light); text-decoration: none; gap: 8px; font-size: 0.82rem; transition: var(--transition); }
+        .submenu-item:hover { background: #f0f0f0; color: var(--navy); }
+        .sidebar-footer { padding: 14px; border-top: 1px solid #eee; text-align: center; font-size: 0.7rem; color: var(--gray); }
+        .menu-divider { height: 1px; background: linear-gradient(to right, transparent, #ddd, transparent); margin: 15px 20px; border: none; }
+
+        .main-content { flex: 1; margin-left: 250px; margin-top: 68px; padding: 24px; min-height: calc(100vh - 68px); }
+        .card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; }
+        .card-header { padding: 20px 24px; border-bottom: 2px solid rgba(212,175,55,0.15); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; background: linear-gradient(135deg, #ffffff 0%, #fef9e6 100%); }
+        .card-header h4 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .card-header h4 i { color: var(--primary); }
+        .card-body { padding: 24px; }
+        .section-divider { border: none; border-top: 2px solid rgba(212,175,55,0.15); margin: 24px 0; }
+        .section-title { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .section-title i { color: var(--primary); }
+        
+        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid #e0e0e0; }
+        .inventory-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.82rem; }
+        .inventory-table th { background: var(--navy); color: var(--primary); padding: 12px 14px; text-align: left; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+        .inventory-table th:first-child { border-top-left-radius: 12px; }
+        .inventory-table th:last-child { border-top-right-radius: 12px; }
+        .inventory-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+        .inventory-table tbody tr:last-child td { border-bottom: none; }
+        .inventory-table tbody tr:last-child td:first-child { border-bottom-left-radius: 12px; }
+        .inventory-table tbody tr:last-child td:last-child { border-bottom-right-radius: 12px; }
+        .inventory-table tr { transition: var(--transition); }
+        .inventory-table tr:hover td { background: rgba(212,175,55,0.04); }
+        .inventory-table tr.no-leido td { background: #fffef5; }
+        
+        .filters-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .search-box { flex: 1; min-width: 200px; position: relative; }
+        .search-box input { width: 100%; padding: 10px 12px 10px 38px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 0.85rem; transition: var(--transition); }
+        .search-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+        .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-light); }
+        .filters-bar select { padding: 10px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 0.85rem; min-width: 140px; cursor: pointer; transition: var(--transition); }
+        .filters-bar select:focus { outline: none; border-color: var(--primary); }
+        
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        
+        .btn { padding: 10px 22px; border-radius: 40px; font-weight: 600; cursor: pointer; font-size: 0.85rem; border: none; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); font-family: 'Poppins', sans-serif; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(212,175,55,0.25); }
+        .btn-secondary { background: #f5f5f5; color: var(--gray); border: 1px solid #e0e0e0; }
+        .btn-secondary:hover { background: #eee; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #c82333; transform: translateY(-1px); }
+        .btn-icon { width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); border: none; font-size: 0.85rem; }
+        .btn-icon-view { background: var(--primary-light); color: var(--primary-dark); }
+        .btn-icon-view:hover { background: var(--primary); color: white; transform: scale(1.1); }
+        .btn-icon-reply { background: #d1ecf1; color: #0c5460; }
+        .btn-icon-reply:hover { background: var(--info); color: white; transform: scale(1.1); }
+        .btn-icon-delete { background: #f8d7da; color: #721c24; }
+        .btn-icon-delete:hover { background: var(--danger); color: white; transform: scale(1.1); }
+        
+        .punto-no-leido { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); margin-right: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .msg-preview { cursor: pointer; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--gray); }
+        
+        .toast-notification { position: fixed; bottom: 24px; right: 24px; padding: 14px 24px; border-radius: 12px; display: flex; align-items: center; gap: 10px; z-index: 9999; animation: slideInRight 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; cursor: pointer; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.3s ease; padding: 20px; }
+        .modal-dialog { background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 650px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; }
+        .modal-dialog-header { margin-bottom: 20px; text-align: center; position: relative; }
+        .modal-dialog-header i { font-size: 2.5rem; margin-bottom: 10px; display: block; color: var(--primary); }
+        .modal-dialog-header h3 { font-size: 1.4rem; color: #333; font-family: 'Playfair Display', serif; }
+        .modal-dialog-header p { color: var(--gray); font-size: 0.85rem; }
+        .modal-close { position: absolute; top: -10px; right: -10px; background: #f5f5f5; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1rem; cursor: pointer; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+        .modal-close:hover { background: var(--danger); color: white; transform: rotate(90deg); }
+        .modal-dialog-body { text-align: left; }
+        .modal-dialog-footer { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+        .modal-dialog-footer .btn { flex: 1; min-width: 100px; justify-content: center; padding: 8px 16px; font-size: 0.8rem; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.8rem; color: var(--gray); }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 0.85rem; font-family: inherit; transition: var(--transition); }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+        .form-group input[readonly] { background: #f5f5f5; cursor: not-allowed; }
+        
+        .upload-zone { border: 2px dashed #e0e0e0; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: var(--transition); background: #fafafa; margin-bottom: 10px; }
+        .upload-zone:hover { border-color: var(--primary); background: var(--primary-light); }
+        .upload-zone i { font-size: 2rem; color: var(--primary); margin-bottom: 8px; }
+        .upload-zone p { font-size: 0.85rem; color: var(--gray); }
+        .archivo-adjunto { display: flex; align-items: center; background: #fafafa; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; gap: 10px; }
+        .archivo-adjunto i { font-size: 1.2rem; color: var(--primary); }
+        .archivo-adjunto .archivo-info { flex: 1; }
+        .archivo-adjunto .archivo-info strong { font-size: 0.8rem; display: block; }
+        .archivo-adjunto .archivo-info small { color: var(--gray-light); font-size: 0.7rem; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        @media (max-width: 992px) { .sidebar { transform: translateX(-100%); } .sidebar.active { transform: translateX(0); } .main-content { margin-left: 0; } .menu-toggle { display: block; } }
+        @media (max-width: 768px) { .dashboard-header { padding: 0 15px; } .main-content { padding: 16px; } }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-left"><div class="logo-container"><div class="logo-placeholder"><i class="fas fa-gem"></i></div><h1>Joyas Valentina</h1></div><button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button></div>
+            <div class="header-right">
+                <div class="user-profile" id="user-profile-btn" style="cursor:pointer;">
+                    <img id="header-foto" class="foto-perfil" src="" alt="Foto" style="display:none;" onerror="this.style.display='none';document.getElementById('header-foto-placeholder').style.display='flex';">
+                    <div id="header-foto-placeholder" class="foto-perfil-placeholder"><i class="fas fa-user-circle"></i></div>
+                    <div class="profile-info"><span class="user-name" id="dashboard-user-name">Usuario</span><span class="user-role" id="dashboard-user-role">Rol</span></div>
+                </div>
+                <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            </div>
+        </header>
+        
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="inicio.html"><i class="fas fa-home"></i><span>Dashboard</span></a></div>
+                <div class="menu-section">
+                    <div class="menu-header" id="inventario-header"><i class="fas fa-boxes"></i><span>Inventario</span><i class="fas fa-chevron-down menu-arrow"></i></div>
+                    <div class="submenu" id="inventario-submenu">
+                        <a href="inicio.html?modulo=inventario-plata" class="submenu-item"><i class="fas fa-ring"></i>Plata</a>
+                        <a href="inicio.html?modulo=inventario-oro" class="submenu-item"><i class="fas fa-crown"></i>Oro</a>
+                        <a href="inicio.html?modulo=inventario-acero" class="submenu-item"><i class="fas fa-gem"></i>Acero</a>
+                        <a href="inicio.html?modulo=inventario-empaques" class="submenu-item"><i class="fas fa-box-open"></i>Empaques</a>
+                        <a href="inicio.html?modulo=inventario-insumos" class="submenu-item"><i class="fas fa-tools"></i>Insumos</a>
+                    </div>
+                </div>
+                <div class="menu-section" id="movimientos-header">
+                    <div class="menu-header" id="movimientos-menu"><i class="fas fa-exchange-alt"></i><span>Movimientos</span><i class="fas fa-chevron-down menu-arrow"></i></div>
+                    <div class="submenu" id="movimientos-submenu">
+                        <a href="inicio.html?modulo=ingreso-producto" class="submenu-item"><i class="fas fa-plus-circle"></i>Ingreso</a>
+                        <a href="ajustes.html" class="submenu-item"><i class="fas fa-balance-scale"></i>Ajuste</a>
+                        <a href="cambios.html" class="submenu-item"><i class="fas fa-exchange-alt"></i>Cambios</a>
+                    </div>
+                </div>
+                <div class="menu-item"><a href="inicio.html?modulo=venta"><i class="fas fa-shopping-cart"></i><span>Venta</span></a></div>
+                <div class="menu-item" id="menu-reportes"><a href="inicio.html?modulo=reportes"><i class="fas fa-chart-bar"></i><span>Reportes</span></a></div>
+                <div class="menu-item" id="menu-servicios"><a href="inicio.html?modulo=servicios"><i class="fas fa-concierge-bell"></i><span>Servicios</span></a></div>
+                <div class="menu-item" id="menu-usuarios"><a href="usuario.html"><i class="fas fa-users"></i><span>Usuarios</span></a></div>
+                <div class="menu-item" id="menu-clientes"><a href="clientes.html"><i class="fas fa-user-tie"></i><span>Clientes</span></a></div>
+                <div class="menu-item" id="menu-mantenimiento"><a href="mantenimiento.html"><i class="fas fa-cogs"></i><span>Mantenimiento</span></a></div>
+                <div class="menu-item active"><a href="mensajes.html"><i class="fas fa-envelope"></i><span>Mensajes</span></a></div>
+                <hr class="menu-divider">
+                <div class="menu-item"><a href="inicio.html?modulo=reparaciones"><i class="fas fa-wrench"></i><span>Reparaciones</span></a></div>
+                <div class="menu-item"><a href="inicio.html?modulo=fabricacion"><i class="fas fa-industry"></i><span>Fabricación</span></a></div>
+            </nav>
+            <div class="sidebar-footer"><p><strong>Joyas Valentina</strong></p><p>SIGICOVE v3.0</p><p>© 2024</p></div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-envelope"></i> Bandeja de Mensajes</h4>
+                    
+                </div>
+                <div class="card-body">
+                    <div class="filters-bar">
+                        <div class="search-box"><i class="fas fa-search"></i><input type="text" id="buscar-mensaje" placeholder="Buscar por nombre, correo o mensaje..." oninput="filtrarMensajes()"></div>
+                        <select id="filtro-estado" onchange="filtrarMensajes()"><option value="">Todos</option><option value="no-leido">No leídos</option><option value="leido">Leídos</option></select>
+                    </div>
+                    
+                    
+                    <div class="section-title"><i class="fas fa-list"></i> Mensajes <span style="color:var(--gray);font-size:0.8rem;">(Total: <strong id="total-mensajes">0</strong>)</span></div>
+                    <div class="table-responsive">
+                        <table class="inventory-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Teléfono</th>
+                                    <th>Mensaje</th>
+                                    <th>Estado</th>
+                                    <th style="text-align:center;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-mensajes">
+                                <tr><td colspan="7" style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--primary);"></i></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Cerrar Sesión (mismo diseño que inicio.html) -->
+    <div id="modal-cerrar-sesion" class="modal-overlay" style="display:none;">
+        <div class="modal-dialog" style="max-width:420px;">
+            <div class="modal-dialog-header">
+                <i class="fas fa-sign-out-alt" style="color:var(--danger);"></i>
+                <h3>Cerrar Sesión</h3>
+                <p style="color:var(--gray);">¿Estás seguro de que deseas cerrar sesión?</p>
+            </div>
+            <div class="modal-dialog-footer">
+                <button class="btn-secondary" onclick="document.getElementById('modal-cerrar-sesion').style.display='none'">Cancelar</button>
+                <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="input-adjuntos" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp" multiple style="display:none;">
+
+    <script>
+        let currentUser = null, todosLosMensajes = [], archivosAdjuntos = [];
+        const CORREO_EMPRESA = 'jvalentinamayoreo@gmail.com';
+
+        function toast(m, t='success') { const e=document.querySelector('.toast-notification'); if(e)e.remove(); const el=document.createElement('div'); el.className='toast-notification'; el.style.background=t==='success'?'#28a745':'#dc3545'; el.innerHTML=`<i class="fas ${t==='success'?'fa-check-circle':'fa-exclamation-circle'}"></i> ${m}`; document.body.appendChild(el); setTimeout(()=>el.remove(),3000); }
+        function mostrarConfirmacion(t,m,i,cb,tb,cb2) { const ex=document.querySelector('.modal-overlay'); if(ex)ex.remove(); const modal=document.createElement('div'); modal.className='modal-overlay'; modal.innerHTML=`<div class="modal-dialog" style="max-width:420px;"><div class="modal-dialog-header"><i class="fas ${i}" style="color:${cb};"></i><h3>${t}</h3><p style="color:var(--gray);">${m}</p></div><div class="modal-dialog-footer"><button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancelar</button><button class="btn-danger" style="background:${cb};" onclick="this.closest('.modal-overlay').remove();${cb2}">${tb}</button></div></div>`; modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();}); document.body.appendChild(modal); }
+
+        function initHeader() {
+            const s = localStorage.getItem('joyas_user');
+            if (!s) { window.location.href = 'index.html'; return; }
+            try {
+                currentUser = JSON.parse(s);
+                document.getElementById('dashboard-user-name').textContent = currentUser.nombreCompleto || currentUser.username || 'Usuario';
+                document.getElementById('dashboard-user-role').textContent = currentUser.rol || '';
+                if (currentUser.foto) {
+                    document.getElementById('header-foto').src = currentUser.foto;
+                    document.getElementById('header-foto').style.display = 'block';
+                    document.getElementById('header-foto-placeholder').style.display = 'none';
+                }
+                document.getElementById('user-profile-btn').onclick = () => window.location.href = `perfil.html?id=${currentUser.id_empleado}`;
+                aplicarControlAcceso(currentUser);
+            } catch(e) { localStorage.removeItem('joyas_user'); window.location.href = 'index.html'; }
+        }
+
+        function aplicarControlAcceso(user) {
+            const rol = (user.rol || '').toLowerCase();
+            const menuReportes = document.getElementById('menu-reportes');
+            const menuServicios = document.getElementById('menu-servicios');
+            const menuMantenimiento = document.getElementById('menu-mantenimiento');
+            const movimientosHeader = document.getElementById('movimientos-header');
+            const menuClientes = document.getElementById('menu-clientes');
+            const menuUsuarios = document.getElementById('menu-usuarios');
+            
+            if (menuReportes) menuReportes.style.display = '';
+            if (menuServicios) menuServicios.style.display = '';
+            if (menuMantenimiento) menuMantenimiento.style.display = '';
+            if (movimientosHeader) movimientosHeader.style.display = '';
+            if (menuClientes) menuClientes.style.display = '';
+            if (menuUsuarios) menuUsuarios.style.display = '';
+            
+            if (rol === 'administrador' || rol === 'admin') {
+                // Acceso completo
+            } else if (rol === 'gerente general' || rol === 'gerente') {
+                if (menuMantenimiento) menuMantenimiento.style.display = 'none';
+            } else if (rol === 'vendedor') {
+                if (menuReportes) menuReportes.style.display = 'none';
+                if (menuServicios) menuServicios.style.display = 'none';
+                if (menuMantenimiento) menuMantenimiento.style.display = 'none';
+                if (movimientosHeader) movimientosHeader.style.display = 'none';
+                if (menuClientes) menuClientes.style.display = 'none';
+                if (menuUsuarios) menuUsuarios.style.display = 'none';
+            }
+        }
+
+        async function cargarMensajes() {
+            try {
+                const r = await fetch('/api/mensajes');
+                todosLosMensajes = await r.json();
+                mostrarMensajes(todosLosMensajes);
+                actualizarContador();
+            } catch(e) {
+                document.getElementById('tabla-mensajes').innerHTML = '<tr><td colspan="7">Error al cargar</td></tr>';
+            }
+        }
+
+        function actualizarContador() {
+            const nl = todosLosMensajes.filter(m => !m.leido).length;
+            const c = document.getElementById('contador-no-leidos');
+            if (c) {
+                c.innerHTML = nl > 0 ? `<i class="fas fa-envelope"></i> ${nl} sin leer` : '<i class="fas fa-check-circle"></i> Todos leídos';
+                c.className = nl > 0 ? 'badge badge-warning' : 'badge badge-success';
+            }
+        }
+
+        function filtrarMensajes() {
+            const b = (document.getElementById('buscar-mensaje')?.value || '').toLowerCase();
+            const e = document.getElementById('filtro-estado')?.value || '';
+            let f = [...todosLosMensajes];
+            if (b) f = f.filter(m => (m.nombre_completo || '').toLowerCase().includes(b) || (m.correo || '').toLowerCase().includes(b) || (m.mensaje || '').toLowerCase().includes(b));
+            if (e === 'no-leido') f = f.filter(m => !m.leido);
+            else if (e === 'leido') f = f.filter(m => m.leido);
+            mostrarMensajes(f);
+        }
+
+        function mostrarMensajes(msgs) {
+            document.getElementById('total-mensajes').textContent = msgs.length;
+            const t = document.getElementById('tabla-mensajes');
+            if (!msgs.length) {
+                t.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;"><i class="fas fa-envelope-open-text" style="font-size:2.5rem;display:block;margin-bottom:10px;color:var(--gray-light);"></i>No hay mensajes</td></tr>';
+                return;
+            }
+            t.innerHTML = msgs.map(m => `
+                <tr class="${!m.leido ? 'no-leido' : ''}">
+                    <td style="white-space:nowrap;font-size:0.8rem;">${new Date(m.fecha_envio).toLocaleDateString('es-GT', {day:'2-digit', month:'short', year:'numeric'})}<br><small style="color:var(--gray-light);">${new Date(m.fecha_envio).toLocaleTimeString('es-GT', {hour:'2-digit', minute:'2-digit'})}</small></td>
+                    <td><strong>${!m.leido ? '<span class="punto-no-leido"></span>' : ''}${m.nombre_completo}</strong></td>
+                    <td><a href="mailto:${m.correo}" style="color:var(--primary);font-size:0.82rem;">${m.correo}</a></td>
+                    <td style="font-size:0.82rem;">${m.telefono || 'N/D'}</td>
+                    <td class="msg-preview" onclick="verMensaje(${m.id_contacto})" title="Ver mensaje completo">${m.mensaje}</td>
+                    <td style="cursor:pointer;" onclick="toggleLeido(${m.id_contacto}, ${!m.leido})">${m.leido ? '<span class="badge badge-success">Leído</span>' : '<span class="badge badge-warning">Nuevo</span>'}</td>
+                    <td style="text-align:center;white-space:nowrap;">
+                        <button class="btn-icon btn-icon-view" onclick="verMensaje(${m.id_contacto})" title="Ver mensaje"><i class="fas fa-eye"></i></button>
+                        <button class="btn-icon btn-icon-reply" onclick="abrirModalResponder(${m.id_contacto})" title="Responder"><i class="fas fa-reply"></i></button>
+                        <button class="btn-icon btn-icon-delete" onclick="confirmarEliminar(${m.id_contacto})" title="Eliminar"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function verMensaje(id) {
+            const m = todosLosMensajes.find(x => x.id_contacto === id);
+            if (!m) return;
+            if (!m.leido) {
+                fetch(`/api/mensajes/${id}/leido`, { method: 'PUT' });
+                m.leido = true;
+                actualizarContador();
+                mostrarMensajes(todosLosMensajes);
+            }
+            const fecha = new Date(m.fecha_envio);
+            const fechaStr = fecha.toLocaleDateString('es-GT', { year: 'numeric', month: 'long', day: 'numeric' });
+            const horaStr = fecha.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit' });
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-dialog" onclick="event.stopPropagation()">
+                    <div class="modal-dialog-header">
+                        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></button>
+                        <i class="fas fa-envelope-open-text"></i>
+                        <h3>${m.nombre_completo}</h3>
+                        <p>${fechaStr} · ${horaStr}</p>
+                    </div>
+                    <div class="modal-dialog-body">
+                        <div style="margin-bottom:15px;background:#fafafa;border-radius:10px;padding:15px;">
+                            <p style="font-size:0.85rem;margin-bottom:5px;"><i class="fas fa-envelope" style="color:var(--primary);width:20px;"></i> ${m.correo}</p>
+                            ${m.telefono ? `<p style="font-size:0.85rem;"><i class="fas fa-phone" style="color:var(--primary);width:20px;"></i> ${m.telefono}</p>` : ''}
+                        </div>
+                        <div style="background:#fafafa;border-radius:10px;padding:20px;font-size:0.9rem;line-height:1.8;white-space:pre-wrap;border-left:3px solid var(--primary);">${m.mensaje}</div>
+                    </div>
+                    <div class="modal-dialog-footer">
+                        <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove();abrirModalResponder(${m.id_contacto})"><i class="fas fa-reply"></i> Responder</button>
+                        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cerrar</button>
+                    </div>
+                </div>`;
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+            document.body.appendChild(modal);
+        }
+
+        function abrirModalResponder(id) {
+            const m = todosLosMensajes.find(x => x.id_contacto === id);
+            if (!m) return;
+            
+            archivosAdjuntos = [];
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.id = 'modal-responder';
+            modal.innerHTML = `
+                <div class="modal-dialog" onclick="event.stopPropagation()">
+                    <div class="modal-dialog-header">
+                        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></button>
+                        <i class="fas fa-reply" style="color:var(--primary);"></i>
+                        <h3>Responder Mensaje</h3>
+                        <p>Respondiendo a: <strong>${m.nombre_completo}</strong></p>
+                    </div>
+                    <div class="modal-dialog-body">
+                        <div class="form-group">
+                            <label><i class="fas fa-user" style="color:var(--primary);"></i> Para:</label>
+                            <input type="email" value="${m.correo}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-heading" style="color:var(--primary);"></i> Asunto:</label>
+                            <input type="text" id="respuesta-asunto" value="Respuesta Joyas Valentina - ${m.nombre_completo}">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-comment" style="color:var(--primary);"></i> Mensaje:</label>
+                            <textarea id="respuesta-mensaje" rows="8" placeholder="Escriba su respuesta...">Hola ${m.nombre_completo},
+
+Gracias por contactarnos.
+
+Saludos,
+Joyas Valentina</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-paperclip" style="color:var(--primary);"></i> Adjuntos (opcional):</label>
+                            <div class="upload-zone" onclick="document.getElementById('input-adjuntos').click()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p><strong>Haga clic para adjuntar archivos</strong><br>
+                                <small>PDF, JPG, PNG, GIF (máx 5MB por archivo)</small></p>
+                            </div>
+                            <div id="lista-adjuntos"></div>
+                        </div>
+                        
+                        <div style="background:#fef9e6;border-radius:10px;padding:12px;margin-top:10px;">
+                            <small style="color:var(--gray);"><i class="fas fa-info-circle"></i> Se enviará desde: ${CORREO_EMPRESA}</small>
+                        </div>
+                    </div>
+                    <div class="modal-dialog-footer" style="gap:10px;">
+                        <button class="btn btn-secondary" style="flex:0 0 auto;padding:8px 18px;font-size:0.8rem;" onclick="this.closest('.modal-overlay').remove()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button class="btn btn-primary" style="flex:0 0 auto;padding:8px 18px;font-size:0.8rem;" onclick="enviarRespuesta('${m.correo}')">
+                            <i class="fas fa-paper-plane"></i> Enviar Respuesta
+                        </button>
+                    </div>
+                </div>`;
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+            document.body.appendChild(modal);
+            
+            document.getElementById('input-adjuntos').addEventListener('change', manejarArchivos);
+        }
+
+        function manejarArchivos(event) {
+            const files = event.target.files;
+            const listaAdjuntos = document.getElementById('lista-adjuntos');
+            
+            for (const file of files) {
+                if (file.size > 5 * 1024 * 1024) {
+                    toast(`"${file.name}" excede 5MB`, 'error');
+                    continue;
+                }
+                
+                const ext = file.name.split('.').pop().toLowerCase();
+                const tiposPermitidos = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'webp'];
+                
+                if (!tiposPermitidos.includes(ext)) {
+                    toast(`"${file.name}" no es un formato permitido`, 'error');
+                    continue;
+                }
+                
+                if (!archivosAdjuntos.find(a => a.name === file.name)) {
+                    archivosAdjuntos.push(file);
+                }
+            }
+            
+            actualizarListaAdjuntos(listaAdjuntos);
+            event.target.value = '';
+        }
+
+        function actualizarListaAdjuntos(container) {
+            if (!container) return;
+            
+            if (archivosAdjuntos.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            container.innerHTML = archivosAdjuntos.map((file, index) => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                const icono = ext === 'pdf' ? 'fa-file-pdf' : 'fa-file-image';
+                return `
+                    <div class="archivo-adjunto">
+                        <i class="fas ${icono}"></i>
+                        <div class="archivo-info">
+                            <strong>${file.name}</strong>
+                            <small>${(file.size / 1024).toFixed(1)} KB</small>
+                        </div>
+                        <button class="btn-icon btn-icon-delete" onclick="eliminarAdjunto(${index})" style="width:30px;height:30px;font-size:0.7rem;"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function eliminarAdjunto(index) {
+            archivosAdjuntos.splice(index, 1);
+            actualizarListaAdjuntos(document.getElementById('lista-adjuntos'));
+        }
+
+        async function enviarRespuesta(correoCliente) {
+            const asunto = document.getElementById('respuesta-asunto').value.trim();
+            const mensaje = document.getElementById('respuesta-mensaje').value.trim();
+            
+            if (!asunto) { toast('El asunto es requerido', 'error'); return; }
+            if (!mensaje) { toast('El mensaje es requerido', 'error'); return; }
+            
+            try {
+                const formData = new FormData();
+                formData.append('correo_destino', correoCliente);
+                formData.append('asunto', asunto);
+                formData.append('mensaje', mensaje);
+                
+                archivosAdjuntos.forEach(file => {
+                    formData.append('adjuntos', file);
+                });
+                
+                const r = await fetch('/api/enviar-respuesta', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const d = await r.json();
+                
+                if (d.success) {
+                    document.getElementById('modal-responder')?.remove();
+                    toast('✅ Respuesta enviada correctamente');
+                } else {
+                    toast(d.message || 'Error al enviar', 'error');
+                }
+            } catch(e) {
+                console.error('Error:', e);
+                toast('Error de conexión', 'error');
+            }
+        }
+
+        async function toggleLeido(id, estado) {
+            await fetch(`/api/mensajes/${id}/${estado ? 'leido' : 'noleido'}`, { method: 'PUT' });
+            const m = todosLosMensajes.find(x => x.id_contacto === id);
+            if (m) m.leido = estado;
+            actualizarContador();
+            filtrarMensajes();
+        }
+
+        function confirmarEliminar(id) {
+            mostrarConfirmacion('Eliminar Mensaje', '¿Eliminar permanentemente?', 'fa-trash-alt', '#dc3545', 'Eliminar', `eliminarMensaje(${id})`);
+        }
+
+        async function eliminarMensaje(id) {
+            await fetch(`/api/mensajes/${id}`, { method: 'DELETE' });
+            todosLosMensajes = todosLosMensajes.filter(m => m.id_contacto !== id);
+            actualizarContador();
+            mostrarMensajes(todosLosMensajes);
+            toast('🗑️ Mensaje eliminado');
+        }
+
+        function cerrarSesion() { localStorage.removeItem('joyas_user'); window.location.href = 'index.html'; }
+
+        document.getElementById('menu-toggle')?.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('active'));
+        document.getElementById('inventario-header')?.addEventListener('click', () => { document.getElementById('inventario-header').classList.toggle('active'); document.getElementById('inventario-submenu').classList.toggle('active'); });
+        document.getElementById('movimientos-menu')?.addEventListener('click', () => { document.getElementById('movimientos-menu').classList.toggle('active'); document.getElementById('movimientos-submenu').classList.toggle('active'); });
+        document.getElementById('logout-btn')?.addEventListener('click', () => { document.getElementById('modal-cerrar-sesion').style.display = 'flex'; });
+        
+        initHeader();
+        cargarMensajes();
+    </script>
+</body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenimiento | Joyas Valentina</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #D4AF37; --primary-dark: #b8941f; --primary-light: rgba(212,175,55,0.08);
+            --navy: #1a1a2e; --navy-light: #2a2a40; --gray: #666; --gray-light: #999;
+            --light-gray: #f5f5f5; --white: #ffffff; --danger: #dc3545;
+            --success: #28a745; --info: #0dcaf0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06); --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
+            --transition: all 0.25s ease; --radius: 14px;
+        }
+        body { font-family: 'Poppins', sans-serif; background: #f0f2f5; color: #333; overflow-x: hidden; }
+        .dashboard-header { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: var(--navy); display: flex; justify-content: space-between; align-items: center; padding: 0 28px; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+        .header-left { display: flex; align-items: center; gap: 18px; }
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; box-shadow: 0 3px 12px rgba(212,175,55,0.35); }
+        .dashboard-header h1 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 600; color: var(--primary); }
+        .header-right { display: flex; align-items: center; gap: 14px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 40px; cursor: pointer; transition: var(--transition); border: 1px solid rgba(255,255,255,0.1); }
+        .user-profile:hover { background: rgba(255,255,255,0.14); }
+        .profile-info { display: flex; flex-direction: column; }
+        .user-name { font-weight: 600; font-size: 0.85rem; color: white; }
+        .user-role { font-size: 0.7rem; color: var(--primary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .logout-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 40px; color: #ccc; cursor: pointer; transition: var(--transition); font-size: 0.85rem; }
+        .logout-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
+        .menu-toggle { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: white; }
+        .foto-perfil { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .foto-perfil-placeholder { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); }
+        .foto-perfil-placeholder i { font-size: 1.3rem; color: var(--primary); }
+
+        .sidebar { width: 250px; background: #fafafa; border-right: 1px solid #eee; position: fixed; top: 68px; left: 0; bottom: 0; transition: transform 0.3s ease; z-index: 999; display: flex; flex-direction: column; }
+        .sidebar-menu { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .menu-item a, .menu-header { display: flex; align-items: center; padding: 11px 18px; color: var(--gray); text-decoration: none; transition: var(--transition); gap: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 500; }
+        .menu-item a i, .menu-header i:first-child { width: 20px; color: var(--primary); font-size: 0.95rem; }
+        .menu-item a:hover, .menu-header:hover { background: rgba(212,175,55,0.06); color: var(--navy); }
+        .menu-item.active a { background: rgba(212,175,55,0.12); color: var(--navy); border-left: 3px solid var(--primary); font-weight: 600; }
+        .menu-arrow { margin-left: auto; transition: transform 0.3s; font-size: 0.7rem; }
+        .menu-header.active .menu-arrow { transform: rotate(180deg); }
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: #f5f5f5; }
+        .submenu.active { max-height: 500px; }
+        .submenu-item { display: flex; align-items: center; padding: 9px 18px 9px 48px; color: var(--gray-light); text-decoration: none; gap: 8px; font-size: 0.82rem; }
+        .submenu-item i { width: 16px; color: var(--primary); font-size: 0.8rem; }
+        .submenu-item:hover { background: #f0f0f0; color: var(--navy); }
+        .sidebar-footer { padding: 14px; border-top: 1px solid #eee; text-align: center; font-size: 0.7rem; color: var(--gray); }
+        .menu-divider { height: 1px; background: linear-gradient(to right, transparent, #ddd, transparent); margin: 15px 20px; border: none; }
+
+        .main-content { flex: 1; margin-left: 250px; margin-top: 68px; padding: 24px; min-height: calc(100vh - 68px); }
+        .module-header { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid rgba(212,175,55,0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .module-header h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; display: flex; align-items: center; gap: 8px; color: #333; }
+        .module-header h3 i { color: var(--primary); }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 4px; font-weight: 500; font-size: 0.8rem; color: var(--gray); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-family: inherit; font-size: 0.85rem; transition: var(--transition); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+        .btn-primary { background: var(--primary); color: white; padding: 10px 22px; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; transition: var(--transition); font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(212,175,55,0.25); }
+        .btn-secondary { background: #f5f5f5; color: var(--gray); padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: var(--transition); }
+        .btn-secondary:hover { background: #eee; }
+        .btn-danger { background: var(--danger); color: white; padding: 6px 12px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.75rem; transition: var(--transition); }
+        .btn-danger:hover { background: #c82333; }
+        .btn-success { background: var(--success); color: white; padding: 6px 12px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.75rem; transition: var(--transition); }
+        .btn-success:hover { background: #218838; }
+        .table-container { overflow-x: auto; background: var(--white); border-radius: 10px; border: 1px solid #eee; }
+        .inventory-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+        .inventory-table th { background: var(--navy); color: var(--primary); padding: 10px 12px; text-align: left; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+        .inventory-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; }
+        .inventory-table tr:hover { background: rgba(212,175,55,0.04); }
+        .tabs-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { padding: 8px 16px; background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 20px; cursor: pointer; font-size: 0.78rem; transition: var(--transition); white-space: nowrap; }
+        .tab-btn:hover { background: #eee; }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.55); z-index: 2000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.25s ease; }
+        .modal-dialog { background: white; border-radius: 16px; padding: 24px; max-width: 500px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: modalIn 0.3s ease; max-height: 80vh; overflow-y: auto; }
+        .modal-dialog-sm { max-width: 400px; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(-20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-dialog-header { text-align: center; margin-bottom: 18px; }
+        .modal-dialog-header h3 { font-size: 1.2rem; margin-bottom: 4px; color: #333; }
+        .modal-dialog-header p { color: var(--gray); font-size: 0.85rem; }
+        .modal-dialog-header i { font-size: 3rem; margin-bottom: 8px; }
+        .modal-dialog-footer { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .modal-dialog-footer button { flex: 1; padding: 10px; border-radius: 40px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: var(--transition); }
+        .toast-notification { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 10px; display: flex; align-items: center; gap: 8px; z-index: 9999; animation: slideInRight 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; cursor: pointer; }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @media (max-width: 992px) { .sidebar { transform: translateX(-100%); } .sidebar.active { transform: translateX(0); } .main-content { margin-left: 0; } .menu-toggle { display: block; } }
+        @media (max-width: 768px) { .dashboard-header { padding: 0 15px; } .main-content { padding: 16px; } }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <div class="logo-container">
+                    <div class="logo-placeholder"><i class="fas fa-gem"></i></div>
+                    <h1>Joyas Valentina</h1>
+                </div>
+                <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile" id="user-profile-btn" style="cursor:pointer;" title="Ver perfil">
+                    <div class="profile-image" id="profile-image-container">
+                        <img id="header-foto" class="foto-perfil" src="" alt="Foto" style="display:none;">
+                        <div id="header-foto-placeholder" class="foto-perfil-placeholder"><i class="fas fa-user-circle"></i></div>
+                    </div>
+                    <div class="profile-info">
+                        <span class="user-name" id="dashboard-user-name">Usuario</span>
+                        <span class="user-role" id="dashboard-user-role">Rol</span>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="inicio.html"><i class="fas fa-home"></i><span>Dashboard</span></a></div>
+                <div class="menu-section">
+                    <div class="menu-header" id="inventario-header"><i class="fas fa-boxes"></i><span>Inventario</span><i class="fas fa-chevron-down menu-arrow"></i></div>
+                    <div class="submenu" id="inventario-submenu">
+                        <a href="inicio.html?modulo=inventario-plata" class="submenu-item"><i class="fas fa-ring"></i>Plata</a>
+                        <a href="inicio.html?modulo=inventario-oro" class="submenu-item"><i class="fas fa-crown"></i>Oro</a>
+                        <a href="inicio.html?modulo=inventario-acero" class="submenu-item"><i class="fas fa-gem"></i>Acero</a>
+                        <a href="inicio.html?modulo=inventario-empaques" class="submenu-item"><i class="fas fa-box-open"></i>Empaques</a>
+                        <a href="inicio.html?modulo=inventario-insumos" class="submenu-item"><i class="fas fa-tools"></i>Insumos</a>
+                    </div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-header" id="movimientos-menu"><i class="fas fa-exchange-alt"></i><span>Movimientos</span><i class="fas fa-chevron-down menu-arrow"></i></div>
+                    <div class="submenu" id="movimientos-submenu">
+                        <a href="inicio.html?modulo=ingreso-producto" class="submenu-item"><i class="fas fa-plus-circle"></i>Ingreso</a>
+                        <a href="ajustes.html" class="submenu-item"><i class="fas fa-balance-scale"></i>Ajuste</a>
+                        <a href="inicio.html?modulo=devoluciones" class="submenu-item"><i class="fas fa-undo"></i>Devoluciones</a>
+                    </div>
+                </div>
+                <div class="menu-item"><a href="inicio.html?modulo=venta"><i class="fas fa-shopping-cart"></i><span>Venta</span></a></div>
+                <div class="menu-item"><a href="inicio.html?modulo=reportes"><i class="fas fa-chart-bar"></i><span>Reportes</span></a></div>
+                <div class="menu-item"><a href="inicio.html?modulo=servicios"><i class="fas fa-concierge-bell"></i><span>Servicios</span></a></div>
+                <div class="menu-item"><a href="usuario.html"><i class="fas fa-users"></i><span>Usuarios</span></a></div>
+                <div class="menu-item"><a href="clientes.html"><i class="fas fa-user-tie"></i><span>Clientes</span></a></div>
+                <div class="menu-item active"><a href="mantenimiento.html"><i class="fas fa-tools"></i><span>Mantenimiento</span></a></div>
+                <div class="menu-item"><a href="mensajes.html"><i class="fas fa-envelope"></i><span>Mensajes</span></a></div>
+
+                <hr class="menu-divider">
+
+                <div class="menu-item"><a href="inicio.html?modulo=reparaciones"><i class="fas fa-wrench"></i><span>Reparaciones</span></a></div>
+                <div class="menu-item"><a href="inicio.html?modulo=fabricacion"><i class="fas fa-industry"></i><span>Fabricación</span></a></div>
+            </nav>
+            <div class="sidebar-footer"><p><strong>Joyas Valentina</strong></p><p>SIGICOVE v3.0</p><p>© 2024</p></div>
+        </aside>
+
+        <main class="main-content">
+            <div class="module-header">
+                <h3><i class="fas fa-tools"></i> Mantenimiento de Catálogos</h3>
+            </div>
+
+            <div class="tabs-container" id="tabs-container"></div>
+
+            <div style="background:var(--white);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:1px solid #eee;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <h4 id="current-table-title" style="color:var(--navy);">Seleccione una tabla</h4>
+                    <button class="btn-primary" id="btn-add" onclick="abrirModalCrear()" style="display:none;">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="inventory-table" id="crud-table">
+                        <thead id="table-head"></thead>
+                        <tbody id="table-body">
+                            <tr><td style="text-align:center;padding:40px;">Seleccione una tabla para comenzar</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para crear/editar -->
+    <div class="modal-overlay" id="modal-crud" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-dialog-header">
+                <h3 id="modal-title">Agregar Registro</h3>
+            </div>
+            <form id="form-crud">
+                <div id="form-fields"></div>
+                <div class="modal-dialog-footer">
+                    <button type="button" class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar -->
+    <div class="modal-overlay" id="modal-eliminar" style="display:none;">
+        <div class="modal-dialog modal-dialog-sm">
+            <div class="modal-dialog-header">
+                <i class="fas fa-trash-alt" style="color:var(--danger);"></i>
+                <h3>Confirmar Eliminación</h3>
+                <p id="mensaje-eliminar">¿Está seguro de que desea eliminar este registro?</p>
+            </div>
+            <div class="modal-dialog-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button type="button" class="btn-primary" style="background:var(--danger);" onclick="confirmarEliminacion()">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURACIÓN DE TABLAS ==========
+        const tablasConfig = {
+            departamento: {
+                titulo: 'Departamentos',
+                icono: 'fa-map-marker-alt',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }
+                ],
+                pk: 'id_departamento',
+                tieneActivo: true
+            },
+            municipio: {
+                titulo: 'Municipios',
+                icono: 'fa-city',
+                campos: [
+                    { nombre: 'id_departamento', etiqueta: 'Departamento', tipo: 'select', requerido: true, endpoint: '/api/departamentos', valorId: 'id_departamento', valorMostrar: 'nombre' },
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 80 }
+                ],
+                pk: 'id_municipio',
+                tieneActivo: true
+            },
+            genero: {
+                titulo: 'Géneros',
+                icono: 'fa-venus-mars',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 20 }
+                ],
+                pk: 'id_genero',
+                tieneActivo: true
+            },
+            nacionalidad: {
+                titulo: 'Nacionalidades',
+                icono: 'fa-flag',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }
+                ],
+                pk: 'id_nacionalidad',
+                tieneActivo: true
+            },
+            estado_civil: {
+                titulo: 'Estados Civiles',
+                icono: 'fa-heart',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }
+                ],
+                pk: 'id_estado_civil',
+                tieneActivo: true
+            },
+            tipo_sangre: {
+                titulo: 'Tipos de Sangre',
+                icono: 'fa-tint',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 5 }
+                ],
+                pk: 'id_tipo_sangre',
+                tieneActivo: true
+            },
+            profesion: {
+                titulo: 'Profesiones',
+                icono: 'fa-briefcase',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_profesion',
+                tieneActivo: true
+            },
+            cargo_empleado: {
+                titulo: 'Cargos de Empleado',
+                icono: 'fa-user-tag',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_cargo',
+                tieneActivo: true
+            },
+            tipo_contrato: {
+                titulo: 'Tipos de Contrato',
+                icono: 'fa-file-contract',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 40 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_tipo_contrato',
+                tieneActivo: true
+            },
+            nivel_academico: {
+                titulo: 'Niveles Académicos',
+                icono: 'fa-graduation-cap',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }
+                ],
+                pk: 'id_nivel_academico',
+                tieneActivo: true
+            },
+            alergia: {
+                titulo: 'Alergias',
+                icono: 'fa-allergies',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_alergia',
+                tieneActivo: true
+            },
+            rol: {
+                titulo: 'Roles',
+                icono: 'fa-user-shield',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_rol',
+                tieneActivo: true
+            },
+            permiso: {
+                titulo: 'Permisos',
+                icono: 'fa-key',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_permiso',
+                tieneActivo: false
+            },
+            tipo_documento_empleado: {
+                titulo: 'Tipos de Documento',
+                icono: 'fa-file',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_tipo_documento',
+                tieneActivo: true
+            },
+            categoria_producto: {
+                titulo: 'Categorías de Producto',
+                icono: 'fa-tags',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_categoria_producto',
+                tieneActivo: true
+            },
+            estado_producto: {
+                titulo: 'Estados de Producto',
+                icono: 'fa-check-circle',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_estado_producto',
+                tieneActivo: false
+            },
+            tipo_insumo: {
+                titulo: 'Tipos de Insumo',
+                icono: 'fa-boxes',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_tipo_insumo',
+                tieneActivo: true
+            },
+            tipo_movimiento: {
+                titulo: 'Tipos de Movimiento',
+                icono: 'fa-exchange-alt',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 40 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_tipo_movimiento',
+                tieneActivo: false
+            },
+            estado_ingreso: {
+                titulo: 'Estados de Ingreso',
+                icono: 'fa-clipboard-check',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }
+                ],
+                pk: 'id_estado_ingreso',
+                tieneActivo: false
+            },
+            tipo_servicio: {
+                titulo: 'Tipos de Servicio',
+                icono: 'fa-concierge-bell',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_tipo_servicio',
+                tieneActivo: true
+            },
+            metodo_pago: {
+                titulo: 'Métodos de Pago',
+                icono: 'fa-credit-card',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 200 }
+                ],
+                pk: 'id_metodo_pago',
+                tieneActivo: true
+            },
+            estado_venta: {
+                titulo: 'Estados de Venta',
+                icono: 'fa-shopping-cart',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }
+                ],
+                pk: 'id_estado_venta',
+                tieneActivo: false
+            },
+            estado_orden: {
+                titulo: 'Estados de Orden',
+                icono: 'fa-list',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_estado_orden',
+                tieneActivo: true
+            },
+            tipo_reparacion: {
+                titulo: 'Tipos de Reparación',
+                icono: 'fa-wrench',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 },
+                    { nombre: 'precio', etiqueta: 'Precio', tipo: 'number', requerido: true, step: '0.01', min: '0' }
+                ],
+                pk: 'id_tipo_reparacion',
+                tieneActivo: true
+            },
+            codigo_anillo: {
+                titulo: 'Códigos de Anillo',
+                icono: 'fa-ring',
+                campos: [
+                    { nombre: 'codigo', etiqueta: 'Código', tipo: 'text', requerido: true, maxlength: 30 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 200 }
+                ],
+                pk: 'id_codigo_anillo',
+                tieneActivo: true
+            },
+            talla_anillo: {
+                titulo: 'Tallas de Anillo',
+                icono: 'fa-ruler',
+                campos: [
+                    { nombre: 'codigo', etiqueta: 'Código', tipo: 'text', requerido: true, maxlength: 15 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'text', requerido: false, maxlength: 100 }
+                ],
+                pk: 'id_talla_anillo',
+                tieneActivo: false
+            },
+            color_piedra: {
+                titulo: 'Colores de Piedra',
+                icono: 'fa-palette',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 40 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'text', requerido: false, maxlength: 100 }
+                ],
+                pk: 'id_color_piedra',
+                tieneActivo: false
+            },
+            material_anillo: {
+                titulo: 'Materiales de Anillo',
+                icono: 'fa-gem',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 200 }
+                ],
+                pk: 'id_material_anillo',
+                tieneActivo: false
+            },
+            motivo_ajuste: {
+                titulo: 'Motivos de Ajuste',
+                icono: 'fa-sliders-h',
+                campos: [
+                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 },
+                    { nombre: 'descripcion', etiqueta: 'Descripción', tipo: 'textarea', requerido: false, maxlength: 250 }
+                ],
+                pk: 'id_motivo_ajuste',
+                tieneActivo: true
+            }
+        };
+
+        let tablaActual = null;
+        let registrosActuales = [];
+        let editandoId = null;
+        let eliminandoId = null;
+
+        // ========== FUNCIONES DE UTILIDAD ==========
+        function mostrarAlerta(m, t = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.style.background = t === 'success' ? '#28a745' : '#dc3545';
+            toast.innerHTML = `<i class="fas ${t === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${m}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ========== INICIALIZAR PESTAÑAS ==========
+        function initTabs() {
+            const container = document.getElementById('tabs-container');
+            container.innerHTML = '';
+            Object.keys(tablasConfig).forEach(key => {
+                const config = tablasConfig[key];
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn';
+                btn.innerHTML = `<i class="fas ${config.icono}"></i> ${config.titulo}`;
+                btn.onclick = () => seleccionarTabla(key);
+                container.appendChild(btn);
+            });
+        }
+
+        // ========== SELECCIONAR TABLA ==========
+        async function seleccionarTabla(tabla) {
+            tablaActual = tabla;
+            editandoId = null;
+            eliminandoId = null;
+            
+            // Actualizar tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.tab-btn').classList.add('active');
+            
+            const config = tablasConfig[tabla];
+            document.getElementById('current-table-title').textContent = config.titulo;
+            document.getElementById('btn-add').style.display = 'inline-flex';
+            
+            await cargarRegistros();
+        }
+
+        // ========== CARGAR REGISTROS ==========
+        async function cargarRegistros() {
+            if (!tablaActual) return;
+            
+            try {
+                const response = await fetch(`/api/mantenimiento/${tablaActual}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    registrosActuales = data.data;
+                    renderizarTabla();
+                } else {
+                    mostrarAlerta('Error al cargar datos', 'error');
+                }
+            } catch (e) {
+                console.error('Error:', e);
+                mostrarAlerta('Error de conexión', 'error');
+            }
+        }
+
+        // ========== RENDERIZAR TABLA ==========
+        function renderizarTabla() {
+            const config = tablasConfig[tablaActual];
+            const thead = document.getElementById('table-head');
+            const tbody = document.getElementById('table-body');
+            
+            if (!config || registrosActuales.length === 0) {
+                thead.innerHTML = '';
+                tbody.innerHTML = '<tr><td style="text-align:center;padding:20px;">No hay registros</td></tr>';
+                return;
+            }
+            
+            // Obtener columnas del primer registro
+            const columnas = Object.keys(registrosActuales[0]).filter(col => !col.startsWith('_'));
+            
+            // Renderizar encabezados
+            thead.innerHTML = '<tr>' + columnas.map(col => {
+                const etiqueta = col.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                return `<th>${etiqueta}</th>`;
+            }).join('') + '<th>Acciones</th></tr>';
+            
+            // Renderizar filas
+            tbody.innerHTML = registrosActuales.map(reg => {
+                const pk = config.pk;
+                const id = reg[pk];
+                return '<tr>' + columnas.map(col => {
+                    let valor = reg[col];
+                    if (valor === null || valor === undefined) valor = 'N/A';
+                    if (typeof valor === 'boolean') valor = valor ? '✅ Activo' : '❌ Inactivo';
+                    return `<td>${valor}</td>`;
+                }).join('') + `
+                    <td>
+                        <button class="btn-success" onclick="abrirModalEditar(${id})" style="margin-right:4px;" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-danger" onclick="abrirModalEliminar(${id})" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        // ========== ABRIR MODAL PARA CREAR ==========
+        function abrirModalCrear() {
+            editandoId = null;
+            document.getElementById('modal-title').textContent = 'Agregar Registro';
+            renderizarFormulario();
+            document.getElementById('modal-crud').style.display = 'flex';
+        }
+
+        // ========== ABRIR MODAL PARA EDITAR ==========
+        function abrirModalEditar(id) {
+            editandoId = id;
+            document.getElementById('modal-title').textContent = 'Editar Registro';
+            const registro = registrosActuales.find(r => r[tablasConfig[tablaActual].pk] === id);
+            renderizarFormulario(registro);
+            document.getElementById('modal-crud').style.display = 'flex';
+        }
+
+        // ========== ABRIR MODAL PARA ELIMINAR ==========
+        function abrirModalEliminar(id) {
+            eliminandoId = id;
+            const config = tablasConfig[tablaActual];
+            const registro = registrosActuales.find(r => r[config.pk] === id);
+            
+            // Obtener el nombre del registro para mostrar en el mensaje
+            let nombreRegistro = '';
+            if (registro) {
+                if (registro.nombre) nombreRegistro = registro.nombre;
+                else if (registro.descripcion) nombreRegistro = registro.descripcion;
+                else if (registro.codigo) nombreRegistro = registro.codigo;
+                else nombreRegistro = `ID: ${id}`;
+            }
+            
+            document.getElementById('mensaje-eliminar').textContent = 
+                `¿Está seguro de que desea eliminar "${nombreRegistro}"? Esta acción no se puede deshacer.`;
+            
+            document.getElementById('modal-eliminar').style.display = 'flex';
+        }
+
+        // ========== CERRAR MODAL ELIMINAR ==========
+        function cerrarModalEliminar() {
+            document.getElementById('modal-eliminar').style.display = 'none';
+            eliminandoId = null;
+        }
+
+        // ========== CONFIRMAR ELIMINACIÓN ==========
+        async function confirmarEliminacion() {
+            if (!eliminandoId) return;
+            
+            try {
+                const response = await fetch(`/api/mantenimiento/${tablaActual}/${eliminandoId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    mostrarAlerta('✅ Registro eliminado correctamente');
+                    cerrarModalEliminar();
+                    await cargarRegistros();
+                } else {
+                    mostrarAlerta('❌ ' + (data.message || 'Error al eliminar'), 'error');
+                    cerrarModalEliminar();
+                }
+            } catch (e) {
+                mostrarAlerta('Error de conexión', 'error');
+                cerrarModalEliminar();
+            }
+        }
+
+        // ========== RENDERIZAR FORMULARIO ==========
+        async function renderizarFormulario(registro = null) {
+            const config = tablasConfig[tablaActual];
+            const formFields = document.getElementById('form-fields');
+            formFields.innerHTML = '';
+            
+            for (const campo of config.campos) {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'form-group';
+                
+                let valor = registro ? registro[campo.nombre] : '';
+                let inputHTML = '';
+                
+                if (campo.tipo === 'select' && campo.endpoint) {
+                    // Cargar opciones del endpoint
+                    const response = await fetch(campo.endpoint);
+                    const opciones = await response.json();
+                    inputHTML = `<select id="campo-${campo.nombre}" ${campo.requerido ? 'required' : ''}>
+                        <option value="">Seleccionar...</option>
+                        ${opciones.map(op => `<option value="${op[campo.valorId]}" ${valor === op[campo.valorId] ? 'selected' : ''}>${op[campo.valorMostrar]}</option>`).join('')}
+                    </select>`;
+                } else if (campo.tipo === 'textarea') {
+                    inputHTML = `<textarea id="campo-${campo.nombre}" ${campo.requerido ? 'required' : ''} maxlength="${campo.maxlength || 250}" rows="3">${valor || ''}</textarea>`;
+                } else if (campo.tipo === 'number') {
+                    inputHTML = `<input type="number" id="campo-${campo.nombre}" value="${valor || ''}" ${campo.requerido ? 'required' : ''} step="${campo.step || '1'}" min="${campo.min || ''}">`;
+                } else {
+                    inputHTML = `<input type="text" id="campo-${campo.nombre}" value="${valor || ''}" ${campo.requerido ? 'required' : ''} maxlength="${campo.maxlength || 100}">`;
+                }
+                
+                fieldDiv.innerHTML = `
+                    <label>${campo.etiqueta} ${campo.requerido ? '*' : ''}</label>
+                    ${inputHTML}
+                `;
+                formFields.appendChild(fieldDiv);
+            }
+        }
+
+        // ========== CERRAR MODAL CRUD ==========
+        function cerrarModal() {
+            document.getElementById('modal-crud').style.display = 'none';
+        }
+
+        // ========== MANEJAR ENVÍO DEL FORMULARIO ==========
+        document.getElementById('form-crud').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const config = tablasConfig[tablaActual];
+            const datos = {};
+            
+            for (const campo of config.campos) {
+                const valor = document.getElementById(`campo-${campo.nombre}`).value;
+                datos[campo.nombre] = valor || null;
+            }
+            
+            try {
+                const url = editandoId 
+                    ? `/api/mantenimiento/${tablaActual}/${editandoId}`
+                    : `/api/mantenimiento/${tablaActual}`;
+                const method = editandoId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    mostrarAlerta(editandoId ? '✅ Registro actualizado' : '✅ Registro creado');
+                    cerrarModal();
+                    await cargarRegistros();
+                } else {
+                    mostrarAlerta('❌ ' + (data.message || 'Error al guardar'), 'error');
+                }
+            } catch (e) {
+                mostrarAlerta('Error de conexión', 'error');
+            }
+        });
+
+        // ========== CERRAR MODALES AL HACER CLIC FUERA ==========
+        document.getElementById('modal-crud').addEventListener('click', function(e) {
+            if (e.target === this) cerrarModal();
+        });
+
+        document.getElementById('modal-eliminar').addEventListener('click', function(e) {
+            if (e.target === this) cerrarModalEliminar();
+        });
+
+        // ========== INICIALIZAR ==========
+        function init() {
+            // Cargar datos del usuario
+            const saved = localStorage.getItem('joyas_user');
+            if (!saved || saved === 'undefined' || saved === 'null') {
+                window.location.href = '/index.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(saved);
+                const nombreMostrar = user.nombreCompleto || ((user.nombres || '') + ' ' + (user.apellidos || '')).trim() || user.username || 'Usuario';
+                document.getElementById('dashboard-user-name').textContent = nombreMostrar;
+                document.getElementById('dashboard-user-role').textContent = user.rol || 'Usuario';
+                
+                if (user.foto) {
+                    document.getElementById('header-foto').src = user.foto;
+                    document.getElementById('header-foto').style.display = 'block';
+                    document.getElementById('header-foto-placeholder').style.display = 'none';
+                }
+            } catch(e) {
+                localStorage.removeItem('joyas_user');
+                window.location.href = '/index.html';
+            }
+            
+            // Inicializar pestañas
+            initTabs();
+            
+            // Toggle menú móvil
+            document.getElementById('menu-toggle')?.addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('active');
+            });
+            
+            // Logout
+            document.getElementById('logout-btn')?.addEventListener('click', function() {
+                localStorage.removeItem('joyas_user');
+                window.location.href = '/index.html';
+            });
+            
+            // Submenús
+            document.getElementById('inventario-header')?.addEventListener('click', function() {
+                this.classList.toggle('active');
+                document.getElementById('inventario-submenu').classList.toggle('active');
+            });
+            
+            document.getElementById('movimientos-menu')?.addEventListener('click', function() {
+                this.classList.toggle('active');
+                document.getElementById('movimientos-submenu').classList.toggle('active');
+            });
+        }
+        
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+    </script>
+</body>
+</html>

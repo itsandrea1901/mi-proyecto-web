@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description"
+        content="Joyas Valentina - Elegancia en cada detalle. Descubre nuestras exclusivas colecciones de joyas finas desde 2019.">
+    <meta name="theme-color" content="#D4AF37">
+    <title>Joyas Valentina | Elegancia en cada detalle</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'%3E%3Cpath d='M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2Z'/%3E%3C/svg%3E">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-gem" aria-hidden="true"></i> Joyas Valentina</h1>
+            </div>
+
+            <nav class="main-nav" aria-label="Navegación principal">
+                <ul>
+                    <li><a href="#" id="home-link" class="active"><i class="fas fa-home" aria-hidden="true"></i>
+                            Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-page="historia"><i class="fas fa-landmark"
+                                aria-hidden="true"></i> Historia</a></li>
+                    <li><a href="#" class="nav-link" data-page="mision"><i class="fas fa-bullseye"
+                                aria-hidden="true"></i> Misión</a></li>
+                    <li><a href="#" class="nav-link" data-page="vision"><i class="fas fa-eye" aria-hidden="true"></i>
+                            Visión</a></li>
+                    <li><a href="#" class="nav-link" data-page="sucursales"><i class="fas fa-map-marker-alt"
+                                aria-hidden="true"></i> Sucursales</a></li>
+                    <li><a href="#" class="nav-link" data-page="contacto"><i class="fas fa-envelope"
+                                aria-hidden="true"></i> Contacto</a></li>
+                </ul>
+            </nav>
+
+            <div class="auth-buttons">
+                <a href="#" id="login-btn" class="auth-link" aria-label="Iniciar sesión"><i class="fas fa-user"
+                        aria-hidden="true"></i> Ingresar</a>
+                <span id="user-greeting" class="user-greeting" style="display: none;"></span>
+                <a href="#" id="logout-btn" class="auth-link" style="display: none;" aria-label="Cerrar sesión"><i
+                        class="fas fa-sign-out-alt" aria-hidden="true"></i> Salir</a>
+            </div>
+
+            <button class="menu-toggle" aria-label="Menú de navegación" aria-expanded="false">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" aria-label="Presentación">
+            <div class="hero-content">
+                <h2>Elegancia en cada detalle</h2>
+                <p>Desde 2019, distribuyendo joyas que cuentan historias</p>
+                <a href="#" class="btn" id="hero-btn">Descubre nuestras colecciones</a>
+            </div>
+        </section>
+
+        <section class="content-section" id="content-area">
+            <div class="container">
+                <h2 class="section-title">Bienvenidos a Joyas Valentina</h2>
+                <p>Selecciona una opción del menú para conocer más sobre nosotros.</p>
+
+                <div class="content-cards">
+                    <div class="card">
+                        <i class="fas fa-landmark" aria-hidden="true"></i>
+                        <h3>Nuestra Historia</h3>
+                        <p>Descubre los orígenes y trayectoria de nuestra joyería.</p>
+                        <a href="#" class="card-link nav-link" data-page="historia">Ver más <i
+                                class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+
+                    <div class="card">
+                        <i class="fas fa-bullseye" aria-hidden="true"></i>
+                        <h3>Nuestra Misión</h3>
+                        <p>Conoce nuestro propósito y compromiso con la excelencia.</p>
+                        <a href="#" class="card-link nav-link" data-page="mision">Ver más <i class="fas fa-arrow-right"
+                                aria-hidden="true"></i></a>
+                    </div>
+
+                    <div class="card">
+                        <i class="fas fa-eye" aria-hidden="true"></i>
+                        <h3>Nuestra Visión</h3>
+                        <p>Explora nuestras aspiraciones y objetivos futuros.</p>
+                        <a href="#" class="card-link nav-link" data-page="vision">Ver más <i class="fas fa-arrow-right"
+                                aria-hidden="true"></i></a>
+                    </div>
+
+                    <div class="card">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        <h3>Nuestras Sucursales</h3>
+                        <p>Encuentra nuestras tiendas y visita nuestras joyas en persona.</p>
+                        <a href="#" class="card-link nav-link" data-page="sucursales">Ver más <i
+                                class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="dynamic-content" id="dynamic-content">
+            <!-- Historia -->
+            <article class="page-content" id="historia">
+                <div class="page-header">
+                    <h2><i class="fas fa-landmark" aria-hidden="true"></i> Nuestra Historia</h2>
+                    <a href="#" class="back-home"><i class="fas fa-arrow-left" aria-hidden="true"></i> Volver al
+                        inicio</a>
+                </div>
+                <div class="content-container">
+                    <div class="content-image">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                            alt="Taller artesanal de joyería" loading="lazy">
+                    </div>
+                    <div class="content-text">
+                        <p>Joyas Valentina nació en 1985 de la mano de la diseñadora Valentina Rodríguez, quien con
+                            pasión por la artesanía y el diseño de joyas, creó una marca que combina tradición y
+                            modernidad.</p>
+                        <p>Desde sus humildes comienzos en un pequeño taller familiar, hemos crecido hasta convertirnos
+                            en una de las joyerías más prestigiosas del país, manteniendo siempre nuestro compromiso con
+                            la calidad y el diseño exclusivo.</p>
+                        <p>Cada pieza que creamos cuenta una historia, fusionando técnicas ancestrales con tendencias
+                            contemporáneas para ofrecer joyas únicas que perduran en el tiempo.</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Misión -->
+            <article class="page-content" id="mision">
+                <div class="page-header">
+                    <h2><i class="fas fa-bullseye" aria-hidden="true"></i> Nuestra Misión</h2>
+                    <a href="#" class="back-home"><i class="fas fa-arrow-left" aria-hidden="true"></i> Volver al
+                        inicio</a>
+                </div>
+                <div class="content-container">
+                    <div class="content-text">
+                        <p>Somos una Distribuidora de Joyas en plata Italiana 925 con mucha variedad, Aretes para bebé
+                            en Oro 10K y Plata, Variedad de piercings, con el propósito de ofrecer diseños modernos a
+                            precios accesibles.
+                        </p>
+                    </div>
+                    <div class="content-image">
+                        <img src="https://baliq.com/wp-content/uploads/2022/06/Anillos-plata-foto-2-scaled.jpg"
+                            alt="Creación artesanal de joyas" loading="lazy">
+                    </div>
+                </div>
+            </article>
+
+            <!-- Visión -->
+            <article class="page-content" id="vision">
+                <div class="page-header">
+                    <h2><i class="fas fa-eye" aria-hidden="true"></i> Nuestra Visión</h2>
+                    <a href="#" class="back-home"><i class="fas fa-arrow-left" aria-hidden="true"></i> Volver al
+                        inicio</a>
+                </div>
+                <div class="content-container">
+                    <div class="content-image">
+                        <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                            alt="Colección de joyas de lujo" loading="lazy">
+                    </div>
+                    <div class="content-text">
+                        <p>Ser un negocio sólido que nos permita ir creciendo en diferentes puntos, llegando a distintos
+                            sectores económicos del país.
+                        </p>
+
+                    </div>
+                </div>
+            </article>
+
+            <!-- Sucursales -->
+            <article class="page-content" id="sucursales">
+                <div class="page-header">
+                    <h2><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Nuestras Sucursales</h2>
+                    <a href="#" class="back-home"><i class="fas fa-arrow-left" aria-hidden="true"></i> Volver al
+                        inicio</a>
+                </div>
+                <div class="sucursales-container">
+                    <div class="sucursal">
+                        <img src="img/SUCURSALPLAZA.jpeg" alt="Sucursal Plaza San Cristóbal" class="sucursal-imagen"
+                            loading="lazy">
+                        <div class="sucursal-info">
+                            <h3><i class="fas fa-store" aria-hidden="true"></i> Sucursal Plaza San Cristóbal</h3>
+                            <p><strong>Dirección:</strong> CC Plaza San cristóbal Local Interior de Paiz, Zona 8 Mixco
+                            </p>
+                            <p><strong>Teléfono:</strong> (502) 3809-0283</p>
+                            <p><strong>Horario:</strong> Lun-Sab 9:30 - 19:00 / Dom 11:30 - 18:00</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Contacto -->
+            <article class="page-content" id="contacto">
+                <div class="page-header">
+                    <h2><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</h2>
+                    <a href="#" class="back-home"><i class="fas fa-arrow-left" aria-hidden="true"></i> Volver al
+                        inicio</a>
+                </div>
+                <div class="contacto-container">
+                    <div class="contacto-info">
+                        <h3>Información de contacto</h3>
+                        <p><i class="fas fa-phone" aria-hidden="true"></i> (502) 3809-0253</p>
+                        <p><i class="fas fa-envelope" aria-hidden="true"></i> jvalentinamayoreo@gmail.com</p>
+                        <div class="social-icons">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                    <div class="contacto-form">
+                        <h3>Envíanos un mensaje</h3>
+                        <form id="form-contacto" novalidate>
+                            <div class="form-group">
+                                <input type="text" id="contacto-nombre" placeholder="Nombre completo *" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="contacto-email" placeholder="Correo electrónico *" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" id="contacto-telefono" placeholder="Teléfono (opcional)">
+                            </div>
+                            <div class="form-group">
+                                <textarea id="contacto-mensaje" placeholder="Tu mensaje *" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn">Enviar mensaje</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Login -->
+            <article class="page-content" id="login">
+                <div class="page-header">
+                    <h2><i class="fas fa-user" aria-hidden="true"></i> Iniciar Sesión</h2>
+                    <a href="#" class="back-home"><i class="fas fa-arrow-left" aria-hidden="true"></i> Volver al
+                        inicio</a>
+                </div>
+                <div class="login-container">
+                    <div class="login-form">
+                        <form id="login-form" novalidate>
+                            <div class="form-group">
+                                <input type="email" id="login-email" placeholder="Correo electrónico" required>
+                            </div>
+                            <div class="form-group" style="position: relative;">
+                                <input type="password" id="login-password" placeholder="Contraseña" required>
+                                <button type="button" id="toggle-password" 
+                                    style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); 
+                                           background: none; border: none; cursor: pointer; color: #999; font-size: 1.2rem;"
+                                    aria-label="Mostrar/ocultar contraseña">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <button type="submit" class="btn">Iniciar Sesión</button>
+                            <p class="register-link">
+                                <a href="#" id="forgot-password-link">¿Olvidaste tu contraseña?</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-col">
+                    <h3><i class="fas fa-gem" aria-hidden="true"></i> Joyas Valentina</h3>
+                    <p>Creando momentos inolvidables desde 2019.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Enlaces rápidos</h3>
+                    <ul>
+                        <li><a href="#" id="footer-home">Inicio</a></li>
+                        <li><a href="#" class="nav-link" data-page="historia">Historia</a></li>
+                        <li><a href="#" class="nav-link" data-page="contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contacto</h3>
+                    <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> CC Plaza San Cristóbal Local Interior de
+                        Paiz</p>
+                    <p><i class="fas fa-phone" aria-hidden="true"></i> (502) 3809-0253</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="year"></span> Joyas Valentina. Todos los derechos reservados.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/joyasvalentinagt/" target="_blank" rel="noopener noreferrer"
+                        aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Recuperación de Contraseña -->
+    <div id="modal-recuperacion" class="modal-overlay" style="display: none;">
+        <div class="modal-dialog" style="max-width: 450px;">
+            <div class="modal-dialog-header">
+                <i class="fas fa-key" style="color: var(--primary); font-size: 2.5rem;"></i>
+                <h3>Recuperar Contraseña</h3>
+                <button class="modal-close" onclick="cerrarModalRecuperacion()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-dialog-body">
+                <!-- Paso 1: Ingresar correo -->
+                <div id="paso-1-recuperacion">
+                    <p>Ingresa tu correo electrónico y te enviaremos un código de verificación.</p>
+                    <div class="form-group">
+                        <input type="email" id="recuperacion-email" placeholder="Correo electrónico" required>
+                    </div>
+                    <button class="btn" onclick="solicitarCodigoRecuperacion(event)" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Enviar código
+                    </button>
+                </div>
+                
+                <!-- Paso 2: Ingresar código -->
+                <div id="paso-2-recuperacion" style="display: none;">
+                    <p>Ingresa el código de 6 dígitos que enviamos a tu correo.</p>
+                    <div class="form-group">
+                        <input type="text" id="recuperacion-codigo" placeholder="Código de 6 dígitos" maxlength="6" 
+                               pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code" required>
+                    </div>
+                    <button class="btn" onclick="verificarCodigoRecuperacion()" style="width: 100%;">
+                        <i class="fas fa-check-circle"></i> Verificar código
+                    </button>
+                    <button class="btn-secondary" id="btn-reenviar-codigo" onclick="solicitarCodigoRecuperacion(event)" 
+                            style="width: 100%; margin-top: 10px; background: #f5f5f5; color: #666; border: 1px solid #e0e0e0; 
+                                   border-radius: 40px; padding: 10px 18px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                        <i class="fas fa-redo"></i> Reenviar código
+                    </button>
+                    <button class="btn-secondary" onclick="volverPaso1()" 
+                            style="width: 100%; margin-top: 10px; background: none; border: none; color: #999; 
+                                   cursor: pointer; font-size: 0.85rem; text-decoration: underline;">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                </div>
+                
+                <!-- Paso 3: Nueva contraseña -->
+                <div id="paso-3-recuperacion" style="display: none;">
+                    <p>Ingresa tu nueva contraseña.</p>
+                    <div class="form-group">
+                        <input type="password" id="recuperacion-nueva-password" placeholder="Nueva contraseña" 
+                               minlength="6" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="recuperacion-confirmar-password" placeholder="Confirmar contraseña" 
+                               minlength="6" required>
+                    </div>
+                    <button class="btn" onclick="cambiarPasswordRecuperacion()" style="width: 100%;">
+                        <i class="fas fa-save"></i> Cambiar contraseña
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+            padding: 20px;
+        }
+        
+        .modal-dialog {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+        
+        .modal-dialog-header {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .modal-dialog-header h3 {
+            margin-top: 12px;
+            font-size: 1.5rem;
+            color: #333;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #f5f5f5;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: #dc3545;
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .modal-dialog-body p {
+            color: #666;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .modal-dialog-body .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .modal-dialog-body .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .modal-dialog-body .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .modal-dialog {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .modal-dialog-header h3 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

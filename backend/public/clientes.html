@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes | Joyas Valentina</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #D4AF37; --primary-dark: #b8941f; --primary-light: rgba(212,175,55,0.08);
+            --navy: #1a1a2e; --navy-light: #2a2a40; --gray: #666; --gray-light: #999;
+            --light-gray: #f5f5f5; --white: #ffffff; --danger: #dc3545;
+            --success: #28a745; --info: #0dcaf0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06); --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
+            --transition: all 0.25s ease; --radius: 14px;
+        }
+        body { font-family: 'Poppins', sans-serif; background: #f0f2f5; color: #333; overflow-x: hidden; }
+        .dashboard-header { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: var(--navy); display: flex; justify-content: space-between; align-items: center; padding: 0 28px; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+        .header-left { display: flex; align-items: center; gap: 18px; }
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; box-shadow: 0 3px 12px rgba(212,175,55,0.35); }
+        .dashboard-header h1 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 600; color: var(--primary); }
+        .header-right { display: flex; align-items: center; gap: 14px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 40px; cursor: pointer; transition: var(--transition); border: 1px solid rgba(255,255,255,0.1); }
+        .user-profile:hover { background: rgba(255,255,255,0.14); }
+        .profile-info { display: flex; flex-direction: column; }
+        .user-name { font-weight: 600; font-size: 0.85rem; color: white; }
+        .user-role { font-size: 0.7rem; color: var(--primary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .logout-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 40px; color: #ccc; cursor: pointer; transition: var(--transition); font-size: 0.85rem; }
+        .logout-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
+        .menu-toggle { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: white; }
+        .foto-perfil { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .foto-perfil-placeholder { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); }
+        .foto-perfil-placeholder i { font-size: 1.3rem; color: var(--primary); }
+
+        .sidebar { width: 250px; background: #fafafa; border-right: 1px solid #eee; position: fixed; top: 68px; left: 0; bottom: 0; transition: transform 0.3s ease; z-index: 999; display: flex; flex-direction: column; }
+        .sidebar-menu { flex: 1; padding: 12px 0; overflow-y: auto; }
+        .menu-item a, .menu-header { display: flex; align-items: center; padding: 11px 18px; color: var(--gray); text-decoration: none; transition: var(--transition); gap: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 500; }
+        .menu-item a i, .menu-header i:first-child { width: 20px; color: var(--primary); font-size: 0.95rem; }
+        .menu-item a:hover, .menu-header:hover { background: rgba(212,175,55,0.06); color: var(--navy); }
+        .menu-item.active a { background: rgba(212,175,55,0.12); color: var(--navy); border-left: 3px solid var(--primary); font-weight: 600; }
+        .menu-arrow { margin-left: auto; transition: transform 0.3s; font-size: 0.7rem; }
+        .menu-header.active .menu-arrow { transform: rotate(180deg); }
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: #f5f5f5; }
+        .submenu.active { max-height: 500px; }
+        .submenu-item { display: flex; align-items: center; padding: 9px 18px 9px 48px; color: var(--gray-light); text-decoration: none; gap: 8px; font-size: 0.82rem; }
+        .submenu-item i { width: 16px; color: var(--primary); font-size: 0.8rem; }
+        .submenu-item:hover { background: #f0f0f0; color: var(--navy); }
+        .submenu-item.active { background: rgba(212,175,55,0.12); color: var(--navy); font-weight: 600; }
+        .sidebar-footer { padding: 14px; border-top: 1px solid #eee; text-align: center; font-size: 0.7rem; color: var(--gray); }
+        .menu-divider { height: 1px; background: linear-gradient(to right, transparent, #ddd, transparent); margin: 15px 20px; border: none; }
+
+        .main-content { flex: 1; margin-left: 250px; margin-top: 68px; padding: 24px; min-height: calc(100vh - 68px); }
+        
+        .card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; }
+        .card-body { padding: 24px; }
+        .card-header { padding: 16px 24px; border-bottom: 2px solid rgba(212,175,55,0.15); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .card-header h4 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.4rem; display: flex; align-items: center; gap: 8px; }
+        .card-header h4 i { color: var(--primary); }
+        
+        .section-divider { border: none; border-top: 2px solid rgba(212,175,55,0.15); margin: 24px 0; }
+        .section-title { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .section-title i { color: var(--primary); }
+        
+        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid #e0e0e0; }
+        .inventory-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.82rem; }
+        .inventory-table th { background: var(--navy); color: var(--primary); padding: 10px 12px; text-align: left; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+        .inventory-table th:first-child { border-top-left-radius: 12px; }
+        .inventory-table th:last-child { border-top-right-radius: 12px; }
+        .inventory-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; font-size: 0.8rem; }
+        .inventory-table tbody tr:last-child td { border-bottom: none; }
+        .inventory-table tbody tr:last-child td:first-child { border-bottom-left-radius: 12px; }
+        .inventory-table tbody tr:last-child td:last-child { border-bottom-right-radius: 12px; }
+        .inventory-table tr:hover td { background: rgba(212,175,55,0.04); }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 4px; font-weight: 500; font-size: 0.8rem; color: var(--gray); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-family: inherit; font-size: 0.85rem; transition: var(--transition); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+        .form-group input[readonly] { background: #f5f5f5; cursor: not-allowed; }
+        
+        .btn { padding: 10px 20px; border-radius: 40px; font-weight: 600; cursor: pointer; font-size: 0.85rem; border: none; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); font-family: 'Poppins', sans-serif; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(212,175,55,0.25); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: #f5f5f5; color: var(--gray); border: 1px solid #e0e0e0; }
+        .btn-secondary:hover { background: #eee; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #c82333; }
+        .btn-sm { padding: 6px 10px; font-size: 0.75rem; border-radius: 30px; }
+        .btn-xs { padding: 4px 8px; font-size: 0.7rem; border-radius: 20px; }
+        
+        .search-box { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .search-box input { flex: 1; min-width: 200px; padding: 10px 12px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 0.85rem; font-family: 'Poppins', sans-serif; }
+        .search-box select { padding: 10px 12px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 0.85rem; min-width: 150px; font-family: 'Poppins', sans-serif; }
+        .search-box input:focus, .search-box select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+        
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 15px; font-size: 0.7rem; font-weight: 600; }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        
+        .toast-notification { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 10px; display: flex; align-items: center; gap: 8px; z-index: 9999; animation: slideInRight 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; cursor: pointer; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.3s ease; }
+        .modal-dialog { background: white; border-radius: 20px; padding: 35px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease; text-align: center; }
+        .modal-dialog-header { margin-bottom: 25px; }
+        .modal-dialog-header i { font-size: 3.5rem; margin-bottom: 15px; display: block; }
+        .modal-dialog-header h3 { font-size: 1.5rem; color: #333; margin-bottom: 10px; font-family: 'Playfair Display', serif; font-weight: 600; }
+        .modal-dialog-header p { color: #666; font-size: 0.95rem; line-height: 1.5; }
+        .modal-dialog-body { text-align: left; }
+        .modal-dialog-footer { display: flex; gap: 12px; margin-top: 25px; }
+        .modal-dialog-footer .btn-secondary, .modal-dialog-footer .btn-confirm { flex: 1; padding: 12px; border-radius: 40px; border: none; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; font-family: 'Poppins', sans-serif; }
+        .modal-dialog-footer .btn-secondary { background: #f5f5f5; color: #666; border: 1px solid #e0e0e0; }
+        .modal-dialog-footer .btn-secondary:hover { background: #eee; }
+        .modal-dialog-footer .btn-confirm { color: white; }
+        .modal-dialog-footer .btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        @media (max-width: 992px) { .sidebar { transform: translateX(-100%); } .sidebar.active { transform: translateX(0); } .main-content { margin-left: 0; } .menu-toggle { display: block; } }
+        @media (max-width: 768px) { .dashboard-header { padding: 0 15px; } .main-content { padding: 16px; } .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-left"><div class="logo-container"><div class="logo-placeholder"><i class="fas fa-gem"></i></div><h1>Joyas Valentina</h1></div><button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button></div>
+            <div class="header-right">
+                <div class="user-profile" id="user-profile-btn" style="cursor:pointer;" title="Ver perfil">
+                    <div class="profile-image"><img id="header-foto" class="foto-perfil" src="" alt="Foto" style="display:none;" onerror="this.style.display='none';document.getElementById('header-foto-placeholder').style.display='flex';"><div id="header-foto-placeholder" class="foto-perfil-placeholder"><i class="fas fa-user-circle"></i></div></div>
+                    <div class="profile-info"><span class="user-name" id="dashboard-user-name">Usuario</span><span class="user-role" id="dashboard-user-role">Rol</span></div>
+                </div>
+                <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            </div>
+        </header>
+        
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="inicio.html"><i class="fas fa-home"></i><span>Dashboard</span></a></div>
+                <div class="menu-section">
+                    <div class="menu-header" id="inventario-header"><i class="fas fa-boxes"></i><span>Inventario</span><i class="fas fa-chevron-down menu-arrow"></i></div>
+                    <div class="submenu" id="inventario-submenu">
+                        <a href="inicio.html?modulo=inventario-plata" class="submenu-item"><i class="fas fa-ring"></i>Plata</a>
+                        <a href="inicio.html?modulo=inventario-oro" class="submenu-item"><i class="fas fa-crown"></i>Oro</a>
+                        <a href="inicio.html?modulo=inventario-acero" class="submenu-item"><i class="fas fa-gem"></i>Acero</a>
+                        <a href="inicio.html?modulo=inventario-empaques" class="submenu-item"><i class="fas fa-box-open"></i>Empaques</a>
+                        <a href="inicio.html?modulo=inventario-insumos" class="submenu-item"><i class="fas fa-tools"></i>Insumos</a>
+                    </div>
+                </div>
+                <div class="menu-section" id="movimientos-header">
+                    <div class="menu-header" id="movimientos-menu"><i class="fas fa-exchange-alt"></i><span>Movimientos</span><i class="fas fa-chevron-down menu-arrow"></i></div>
+                    <div class="submenu" id="movimientos-submenu">
+                        <a href="inicio.html?modulo=ingreso-producto" class="submenu-item"><i class="fas fa-plus-circle"></i>Ingreso</a>
+                        <a href="ajustes.html" class="submenu-item"><i class="fas fa-balance-scale"></i>Ajuste</a>
+                        <a href="cambios.html" class="submenu-item"><i class="fas fa-exchange-alt"></i>Cambios</a>
+                    </div>
+                </div>
+                <div class="menu-item"><a href="inicio.html?modulo=venta"><i class="fas fa-shopping-cart"></i><span>Venta</span></a></div>
+                <div class="menu-item" id="menu-reportes"><a href="inicio.html?modulo=reportes"><i class="fas fa-chart-bar"></i><span>Reportes</span></a></div>
+                <div class="menu-item" id="menu-servicios"><a href="inicio.html?modulo=servicios"><i class="fas fa-concierge-bell"></i><span>Servicios</span></a></div>
+                <div class="menu-item" id="menu-usuarios"><a href="usuario.html"><i class="fas fa-users"></i><span>Usuarios</span></a></div>
+                <div class="menu-item active"><a href="clientes.html"><i class="fas fa-user-tie"></i><span>Clientes</span></a></div>
+                <div class="menu-item" id="menu-mantenimiento"><a href="mantenimiento.html"><i class="fas fa-cogs"></i><span>Mantenimiento</span></a></div>
+                <div class="menu-item" id="menu-mensajes"><a href="mensajes.html"><i class="fas fa-envelope"></i><span>Mensajes</span></a></div>
+                <hr class="menu-divider">
+                <div class="menu-item"><a href="inicio.html?modulo=reparaciones"><i class="fas fa-wrench"></i><span>Reparaciones</span></a></div>
+                <div class="menu-item"><a href="inicio.html?modulo=fabricacion"><i class="fas fa-industry"></i><span>Fabricación</span></a></div>
+            </nav>
+            <div class="sidebar-footer"><p><strong>Joyas Valentina</strong></p><p>SIGICOVE v3.0</p><p>© 2024</p></div>
+        </aside>
+        
+        <main class="main-content">
+            <!-- TARJETA ÚNICA CON TODO EL CONTENIDO -->
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-user-tie"></i> Gestión de Clientes</h4>
+                    <button class="btn btn-primary" id="btn-nuevo-cliente" onclick="mostrarFormCliente()"><i class="fas fa-plus"></i> Nuevo Cliente</button>
+                </div>
+                <div class="card-body">
+                    
+                    <!-- SECCIÓN: CLIENTE -->
+                    <div class="search-box">
+                        <input type="text" id="buscar-cliente" placeholder="Buscar por nombre, DPI, NIT..." oninput="filtrarClientes()">
+                        <select id="filtro-estado" onchange="filtrarClientes()">
+                            <option value="">Todos los estados</option>
+                            <option value="activo">Activos</option>
+                            <option value="inactivo">Inactivos</option>
+                        </select>
+                    </div>
+                
+                    
+                    <!-- SECCIÓN: LISTADO DE CLIENTES -->
+                    <div class="section-title"><i class="fas fa-list"></i> Listado de Clientes <span style="color:var(--gray);font-size:0.8rem;font-family:'Poppins',sans-serif;">(Total: <strong id="total-clientes">0</strong>)</span></div>
+                    <div class="table-responsive">
+                        <table class="inventory-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>DPI</th>
+                                    <th>NIT</th>
+                                    <th>Registro</th>
+                                    <th>Estado</th>
+                                    <th style="text-align:center;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-clientes">
+                                <tr><td colspan="6" style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--primary);"></i></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL CERRAR SESIÓN -->
+    <div id="modal-cerrar-sesion" class="modal-overlay" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-dialog-header">
+                <i class="fas fa-sign-out-alt" style="color:var(--danger);"></i>
+                <h3>Cerrar Sesión</h3>
+                <p>¿Estás seguro de que deseas cerrar sesión?</p>
+            </div>
+            <div class="modal-dialog-footer">
+                <button class="btn-secondary" onclick="document.getElementById('modal-cerrar-sesion').style.display='none'">Cancelar</button>
+                <button class="btn-confirm" style="background:var(--danger);" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let todosLosClientes = [];
+
+        // ========== UTILIDADES ==========
+        function toast(m, t = 'success') {
+            const e = document.querySelector('.toast-notification');
+            if (e) e.remove();
+            const el = document.createElement('div');
+            el.className = 'toast-notification';
+            el.style.background = t === 'success' ? '#28a745' : '#dc3545';
+            el.innerHTML = `<i class="fas ${t === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${m}`;
+            document.body.appendChild(el);
+            el.addEventListener('click', () => el.remove());
+            setTimeout(() => { if (el.parentNode) el.remove(); }, 4000);
+        }
+
+        function mostrarConfirmacion(t, m, i, cb, tb, cb2) {
+            const ex = document.querySelector('.modal-overlay');
+            if (ex) ex.remove();
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-dialog" onclick="event.stopPropagation()">
+                    <div class="modal-dialog-header">
+                        <i class="fas ${i}" style="color:${cb};"></i>
+                        <h3>${t}</h3>
+                        <p>${m}</p>
+                    </div>
+                    <div class="modal-dialog-footer">
+                        <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancelar</button>
+                        <button class="btn-confirm" style="background:${cb};" onclick="this.closest('.modal-overlay').remove();${cb2}">${tb}</button>
+                    </div>
+                </div>
+            `;
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+            document.body.appendChild(modal);
+        }
+
+        // ========== INICIALIZAR HEADER ==========
+        function initHeader() {
+            const s = localStorage.getItem('joyas_user');
+            if (!s || s === 'undefined' || s === 'null' || s === '[object Object]') {
+                window.location.href = 'index.html';
+                return;
+            }
+            try {
+                currentUser = JSON.parse(s);
+                if (!currentUser || !currentUser.id) throw new Error('Sesión inválida');
+                
+                const nombreMostrar = currentUser.nombreCompleto || ((currentUser.nombres || '') + ' ' + (currentUser.apellidos || '')).trim() || currentUser.username || 'Usuario';
+                document.getElementById('dashboard-user-name').textContent = nombreMostrar;
+                document.getElementById('dashboard-user-role').textContent = currentUser.rol || 'Usuario';
+                
+                if (currentUser.foto) {
+                    document.getElementById('header-foto').src = currentUser.foto;
+                    document.getElementById('header-foto').style.display = 'block';
+                    document.getElementById('header-foto-placeholder').style.display = 'none';
+                }
+                
+                document.getElementById('user-profile-btn').onclick = () => window.location.href = `perfil.html?id=${currentUser.id_empleado}`;
+                aplicarControlAcceso(currentUser);
+            } catch (e) {
+                localStorage.removeItem('joyas_user');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function aplicarControlAcceso(user) {
+            const rol = (user.rol || '').toLowerCase();
+            
+            const menuReportes = document.getElementById('menu-reportes');
+            const menuUsuarios = document.getElementById('menu-usuarios');
+            const menuServicios = document.getElementById('menu-servicios');
+            const menuMantenimiento = document.getElementById('menu-mantenimiento');
+            const movimientosHeader = document.getElementById('movimientos-header');
+            const btnNuevoCliente = document.getElementById('btn-nuevo-cliente');
+            
+            if (menuReportes) menuReportes.style.display = '';
+            if (menuUsuarios) menuUsuarios.style.display = '';
+            if (menuServicios) menuServicios.style.display = '';
+            if (menuMantenimiento) menuMantenimiento.style.display = '';
+            if (movimientosHeader) movimientosHeader.style.display = '';
+            if (btnNuevoCliente) btnNuevoCliente.style.display = '';
+            
+            if (rol === 'administrador' || rol === 'admin') {
+                // Acceso completo
+            } else if (rol === 'gerente general' || rol === 'gerente') {
+                if (menuMantenimiento) menuMantenimiento.style.display = 'none';
+            } else if (rol === 'vendedor') {
+                if (menuReportes) menuReportes.style.display = 'none';
+                if (menuUsuarios) menuUsuarios.style.display = 'none';
+                if (menuServicios) menuServicios.style.display = 'none';
+                if (menuMantenimiento) menuMantenimiento.style.display = 'none';
+                if (movimientosHeader) movimientosHeader.style.display = 'none';
+                if (btnNuevoCliente) btnNuevoCliente.style.display = 'none';
+            }
+        }
+
+        // ========== CARGA DE CLIENTES ==========
+        async function cargarClientes() {
+            try {
+                const r = await fetch('/api/clientes');
+                todosLosClientes = await r.json();
+                mostrarClientes(todosLosClientes);
+            } catch(e) {
+                document.getElementById('tabla-clientes').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;">Error al cargar clientes</td></tr>';
+            }
+        }
+
+        function filtrarClientes() {
+            const b = (document.getElementById('buscar-cliente')?.value || '').toLowerCase();
+            const e = document.getElementById('filtro-estado')?.value || '';
+            let f = [...todosLosClientes];
+            if (b) {
+                f = f.filter(c => 
+                    (c.primer_nombre || '').toLowerCase().includes(b) ||
+                    (c.segundo_nombre || '').toLowerCase().includes(b) ||
+                    (c.primer_apellido || '').toLowerCase().includes(b) ||
+                    (c.segundo_apellido || '').toLowerCase().includes(b) ||
+                    (c.dpi || '').includes(b) ||
+                    (c.nit || '').includes(b)
+                );
+            }
+            if (e === 'activo') f = f.filter(c => c.activo);
+            else if (e === 'inactivo') f = f.filter(c => !c.activo);
+            mostrarClientes(f);
+        }
+
+        function mostrarClientes(clientes) {
+            document.getElementById('total-clientes').textContent = clientes.length;
+            const t = document.getElementById('tabla-clientes');
+            if (!clientes.length) {
+                t.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;"><i class="fas fa-user-tie" style="font-size:2.5rem;display:block;margin-bottom:10px;color:var(--gray-light);"></i>No se encontraron clientes</td></tr>';
+                return;
+            }
+            t.innerHTML = clientes.map(c => `
+                <tr style="${!c.activo ? 'opacity:0.6;' : ''}">
+                    <td><strong>${c.primer_nombre || ''} ${c.segundo_nombre || ''} ${c.primer_apellido || ''} ${c.segundo_apellido || ''}</strong></td>
+                    <td>${c.dpi || 'N/D'}</td>
+                    <td>${c.nit || 'N/D'}</td>
+                    <td>${c.fecha_registro ? new Date(c.fecha_registro).toLocaleDateString('es-GT') : 'N/D'}</td>
+                    <td><span class="badge ${c.activo ? 'badge-success' : 'badge-danger'}">${c.activo ? 'Activo' : 'Inactivo'}</span></td>
+                    <td style="text-align:center;white-space:nowrap;">
+                        <button class="btn btn-secondary btn-xs" onclick="verFicha(${c.id_cliente})" title="Ver ficha"><i class="fas fa-id-card"></i></button>
+                        <button class="btn btn-secondary btn-xs" onclick="mostrarFormCliente(${c.id_cliente})" title="Editar"><i class="fas fa-edit"></i></button>
+                        ${c.activo ? `<button class="btn btn-danger btn-xs" onclick="confirmarDesactivar(${c.id_cliente},'${c.primer_nombre} ${c.primer_apellido}')" title="Desactivar"><i class="fas fa-user-slash"></i></button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== VER FICHA ==========
+        function verFicha(id) {
+            const c = todosLosClientes.find(x => x.id_cliente === id);
+            if (!c) { toast('Cliente no encontrado', 'error'); return; }
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-dialog" onclick="event.stopPropagation()">
+                    <div class="modal-dialog-header">
+                        <i class="fas fa-user-circle" style="color:var(--primary);"></i>
+                        <h3>${c.primer_nombre || ''} ${c.segundo_nombre || ''} ${c.primer_apellido || ''} ${c.segundo_apellido || ''}</h3>
+                        <span class="badge ${c.activo ? 'badge-success' : 'badge-danger'}">${c.activo ? 'Activo' : 'Inactivo'}</span>
+                    </div>
+                    <div class="modal-dialog-body">
+                        <div class="form-grid">
+                            <div class="form-group"><label>DPI</label><input value="${c.dpi || 'N/D'}" readonly></div>
+                            <div class="form-group"><label>NIT</label><input value="${c.nit || 'N/D'}" readonly></div>
+                            <div class="form-group"><label>Fecha de Registro</label><input value="${c.fecha_registro ? new Date(c.fecha_registro).toLocaleDateString('es-GT') : 'N/D'}" readonly></div>
+                        </div>
+                    </div>
+                    <div class="modal-dialog-footer">
+                        <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cerrar</button>
+                        <button class="btn-confirm" style="background:var(--primary);" onclick="this.closest('.modal-overlay').remove();mostrarFormCliente(${c.id_cliente})"><i class="fas fa-edit"></i> Editar</button>
+                    </div>
+                </div>`;
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+            document.body.appendChild(modal);
+        }
+
+        // ========== DESACTIVAR ==========
+        function confirmarDesactivar(id, nombre) {
+            mostrarConfirmacion('Desactivar Cliente', `¿Estás seguro de desactivar a "${nombre}"?`, 'fa-user-slash', '#dc3545', 'Desactivar', `desactivarCliente(${id})`);
+        }
+
+        async function desactivarCliente(id) {
+            try {
+                const r = await fetch(`/api/clientes/${id}`, { method: 'DELETE' });
+                if (r.ok) {
+                    toast('Cliente desactivado correctamente');
+                    cargarClientes();
+                } else {
+                    toast('Error al desactivar', 'error');
+                }
+            } catch(e) {
+                toast('Error de conexión', 'error');
+            }
+        }
+
+        // ========== FORMULARIO NUEVO/EDITAR ==========
+        async function mostrarFormCliente(id = null) {
+            const esEdicion = !!id;
+            let c = { id_cliente: '', primer_nombre: '', segundo_nombre: '', primer_apellido: '', segundo_apellido: '', dpi: '', nit: '', activo: 1 };
+            
+            if (esEdicion) {
+                c = todosLosClientes.find(x => x.id_cliente === id) || c;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-dialog" onclick="event.stopPropagation()" style="max-width:600px;">
+                    <div class="modal-dialog-header">
+                        <i class="fas ${esEdicion ? 'fa-user-edit' : 'fa-user-plus'}" style="color:var(--primary);"></i>
+                        <h3>${esEdicion ? 'Editar Cliente' : 'Nuevo Cliente'}</h3>
+                        <p>${esEdicion ? 'Modifique los datos del cliente' : 'Complete la información del nuevo cliente'}</p>
+                    </div>
+                    <div class="modal-dialog-body">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Primer Nombre *</label><input type="text" id="fc-pnombre" value="${c.primer_nombre || ''}" required style="text-transform:uppercase;"></div>
+                            <div class="form-group"><label>Segundo Nombre</label><input type="text" id="fc-snombre" value="${c.segundo_nombre || ''}" style="text-transform:uppercase;"></div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Primer Apellido *</label><input type="text" id="fc-papellido" value="${c.primer_apellido || ''}" required style="text-transform:uppercase;"></div>
+                            <div class="form-group"><label>Segundo Apellido</label><input type="text" id="fc-sapellido" value="${c.segundo_apellido || ''}" style="text-transform:uppercase;"></div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group"><label>DPI (Opcional)</label><input type="text" id="fc-dpi" value="${c.dpi || ''}" maxlength="13" placeholder="13 dígitos"></div>
+                            <div class="form-group"><label>NIT (Opcional)</label><input type="text" id="fc-nit" value="${c.nit || ''}"></div>
+                        </div>
+                        ${esEdicion ? `<div class="form-group"><label>Estado</label><select id="fc-activo"><option value="1" ${c.activo ? 'selected' : ''}>Activo</option><option value="0" ${!c.activo ? 'selected' : ''}>Inactivo</option></select></div>` : ''}
+                    </div>
+                    <div class="modal-dialog-footer">
+                        <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancelar</button>
+                        <button class="btn-confirm" style="background:var(--primary);" onclick="guardarCliente(${id})"><i class="fas fa-save"></i> ${esEdicion ? 'Actualizar' : 'Crear Cliente'}</button>
+                    </div>
+                </div>`;
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+            document.body.appendChild(modal);
+        }
+
+        async function guardarCliente(id) {
+            const data = {
+                primer_nombre: document.getElementById('fc-pnombre').value.trim().toUpperCase(),
+                segundo_nombre: document.getElementById('fc-snombre').value.trim().toUpperCase() || null,
+                primer_apellido: document.getElementById('fc-papellido').value.trim().toUpperCase(),
+                segundo_apellido: document.getElementById('fc-sapellido').value.trim().toUpperCase() || null,
+                dpi: document.getElementById('fc-dpi').value.trim() || null,
+                nit: document.getElementById('fc-nit').value.trim() || null,
+                activo: id ? parseInt(document.getElementById('fc-activo')?.value || 1) : 1
+            };
+
+            if (!data.primer_nombre || !data.primer_apellido) {
+                toast('Nombre y apellido son requeridos', 'error');
+                return;
+            }
+
+            try {
+                const url = id ? `/api/clientes/${id}` : '/api/clientes';
+                const method = id ? 'PUT' : 'POST';
+                const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                const j = await r.json();
+                if (j.success) {
+                    document.querySelector('.modal-overlay')?.remove();
+                    await cargarClientes();
+                    toast(id ? 'Cliente actualizado correctamente' : 'Cliente creado correctamente');
+                } else {
+                    toast(j.message || 'Error al guardar', 'error');
+                }
+            } catch(ex) {
+                toast('Error de conexión', 'error');
+            }
+        }
+
+        // ========== EVENTOS ==========
+        document.getElementById('menu-toggle')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        document.getElementById('inventario-header')?.addEventListener('click', () => {
+            document.getElementById('inventario-header').classList.toggle('active');
+            document.getElementById('inventario-submenu').classList.toggle('active');
+        });
+        
+        document.getElementById('movimientos-menu')?.addEventListener('click', () => {
+            document.getElementById('movimientos-menu').classList.toggle('active');
+            document.getElementById('movimientos-submenu').classList.toggle('active');
+        });
+        
+        document.getElementById('logout-btn')?.addEventListener('click', () => {
+            document.getElementById('modal-cerrar-sesion').style.display = 'flex';
+        });
+        
+        function cerrarSesion() {
+            localStorage.removeItem('joyas_user');
+            window.location.href = 'index.html';
+        }
+
+        // ========== INICIAR ==========
+        initHeader();
+        cargarClientes();
+        
+        console.log('clientes.html cargado correctamente');
+    </script>
+</body>
+</html>
