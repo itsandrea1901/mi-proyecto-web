@@ -6,6 +6,7 @@
     <title>Mantenimiento | Joyas Valentina</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="img/log.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -19,15 +20,16 @@
         body { font-family: 'Poppins', sans-serif; background: #f0f2f5; color: #333; overflow-x: hidden; }
         .dashboard-header { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: var(--navy); display: flex; justify-content: space-between; align-items: center; padding: 0 28px; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
         .header-left { display: flex; align-items: center; gap: 18px; }
-        .logo-container { display: flex; align-items: center; gap: 10px; }
-        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; box-shadow: 0 3px 12px rgba(212,175,55,0.35); }
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo-img { height: 40px; width: auto; object-fit: contain; }
+        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
         .dashboard-header h1 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 600; color: var(--primary); }
         .header-right { display: flex; align-items: center; gap: 14px; }
         .user-profile { display: flex; align-items: center; gap: 10px; padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 40px; cursor: pointer; transition: var(--transition); border: 1px solid rgba(255,255,255,0.1); }
         .user-profile:hover { background: rgba(255,255,255,0.14); }
         .profile-info { display: flex; flex-direction: column; }
         .user-name { font-weight: 600; font-size: 0.85rem; color: white; }
-        .user-role { font-size: 0.7rem; color: var(--primary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .user-role { font-size: 0.7rem; color: var(--primary); font-weight: 500; text-transform: uppercase; }
         .logout-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 40px; color: #ccc; cursor: pointer; transition: var(--transition); font-size: 0.85rem; }
         .logout-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
         .menu-toggle { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: white; }
@@ -48,6 +50,7 @@
         .submenu-item { display: flex; align-items: center; padding: 9px 18px 9px 48px; color: var(--gray-light); text-decoration: none; gap: 8px; font-size: 0.82rem; }
         .submenu-item i { width: 16px; color: var(--primary); font-size: 0.8rem; }
         .submenu-item:hover { background: #f0f0f0; color: var(--navy); }
+        .submenu-item.active { background: rgba(212,175,55,0.12); color: var(--navy); font-weight: 600; }
         .sidebar-footer { padding: 14px; border-top: 1px solid #eee; text-align: center; font-size: 0.7rem; color: var(--gray); }
         .menu-divider { height: 1px; background: linear-gradient(to right, transparent, #ddd, transparent); margin: 15px 20px; border: none; }
 
@@ -98,7 +101,8 @@
         <header class="dashboard-header">
             <div class="header-left">
                 <div class="logo-container">
-                    <div class="logo-placeholder"><i class="fas fa-gem"></i></div>
+                    <img src="img/log.png" alt="Joyas Valentina" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                    <div class="logo-placeholder" style="display: none;"><i class="fas fa-gem"></i></div>
                     <h1>Joyas Valentina</h1>
                 </div>
                 <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
@@ -131,12 +135,13 @@
                         <a href="inicio.html?modulo=inventario-insumos" class="submenu-item"><i class="fas fa-tools"></i>Insumos</a>
                     </div>
                 </div>
-                <div class="menu-section">
+                <div class="menu-section" id="movimientos-header">
                     <div class="menu-header" id="movimientos-menu"><i class="fas fa-exchange-alt"></i><span>Movimientos</span><i class="fas fa-chevron-down menu-arrow"></i></div>
                     <div class="submenu" id="movimientos-submenu">
                         <a href="inicio.html?modulo=ingreso-producto" class="submenu-item"><i class="fas fa-plus-circle"></i>Ingreso</a>
+                        <a href="inicio.html?modulo=historial-ingresos" class="submenu-item"><i class="fas fa-history"></i>Historial Ingresos</a>
                         <a href="ajustes.html" class="submenu-item"><i class="fas fa-balance-scale"></i>Ajuste</a>
-                        <a href="inicio.html?modulo=devoluciones" class="submenu-item"><i class="fas fa-undo"></i>Devoluciones</a>
+                        <a href="cambios.html" class="submenu-item"><i class="fas fa-exchange-alt"></i>Cambios</a>
                     </div>
                 </div>
                 <div class="menu-item"><a href="inicio.html?modulo=venta"><i class="fas fa-shopping-cart"></i><span>Venta</span></a></div>
@@ -146,9 +151,7 @@
                 <div class="menu-item"><a href="clientes.html"><i class="fas fa-user-tie"></i><span>Clientes</span></a></div>
                 <div class="menu-item active"><a href="mantenimiento.html"><i class="fas fa-tools"></i><span>Mantenimiento</span></a></div>
                 <div class="menu-item"><a href="mensajes.html"><i class="fas fa-envelope"></i><span>Mensajes</span></a></div>
-
                 <hr class="menu-divider">
-
                 <div class="menu-item"><a href="inicio.html?modulo=reparaciones"><i class="fas fa-wrench"></i><span>Reparaciones</span></a></div>
                 <div class="menu-item"><a href="inicio.html?modulo=fabricacion"><i class="fas fa-industry"></i><span>Fabricación</span></a></div>
             </nav>
@@ -220,9 +223,7 @@
             departamento: {
                 titulo: 'Departamentos',
                 icono: 'fa-map-marker-alt',
-                campos: [
-                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }
-                ],
+                campos: [{ nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }],
                 pk: 'id_departamento',
                 tieneActivo: true
             },
@@ -239,36 +240,28 @@
             genero: {
                 titulo: 'Géneros',
                 icono: 'fa-venus-mars',
-                campos: [
-                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 20 }
-                ],
+                campos: [{ nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 20 }],
                 pk: 'id_genero',
                 tieneActivo: true
             },
             nacionalidad: {
                 titulo: 'Nacionalidades',
                 icono: 'fa-flag',
-                campos: [
-                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }
-                ],
+                campos: [{ nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }],
                 pk: 'id_nacionalidad',
                 tieneActivo: true
             },
             estado_civil: {
                 titulo: 'Estados Civiles',
                 icono: 'fa-heart',
-                campos: [
-                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }
-                ],
+                campos: [{ nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }],
                 pk: 'id_estado_civil',
                 tieneActivo: true
             },
             tipo_sangre: {
                 titulo: 'Tipos de Sangre',
                 icono: 'fa-tint',
-                campos: [
-                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 5 }
-                ],
+                campos: [{ nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 5 }],
                 pk: 'id_tipo_sangre',
                 tieneActivo: true
             },
@@ -305,9 +298,7 @@
             nivel_academico: {
                 titulo: 'Niveles Académicos',
                 icono: 'fa-graduation-cap',
-                campos: [
-                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }
-                ],
+                campos: [{ nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 50 }],
                 pk: 'id_nivel_academico',
                 tieneActivo: true
             },
@@ -394,9 +385,7 @@
             estado_ingreso: {
                 titulo: 'Estados de Ingreso',
                 icono: 'fa-clipboard-check',
-                campos: [
-                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }
-                ],
+                campos: [{ nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }],
                 pk: 'id_estado_ingreso',
                 tieneActivo: false
             },
@@ -423,9 +412,7 @@
             estado_venta: {
                 titulo: 'Estados de Venta',
                 icono: 'fa-shopping-cart',
-                campos: [
-                    { nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }
-                ],
+                campos: [{ nombre: 'nombre', etiqueta: 'Nombre', tipo: 'text', requerido: true, maxlength: 30 }],
                 pk: 'id_estado_venta',
                 tieneActivo: false
             },
@@ -502,12 +489,28 @@
             }
         };
 
+        // Mapa de PKs para el backend
+        const pkMap = {
+            departamento: 'id_departamento', municipio: 'id_municipio', genero: 'id_genero',
+            nacionalidad: 'id_nacionalidad', estado_civil: 'id_estado_civil', tipo_sangre: 'id_tipo_sangre',
+            profesion: 'id_profesion', cargo_empleado: 'id_cargo', tipo_contrato: 'id_tipo_contrato',
+            nivel_academico: 'id_nivel_academico', alergia: 'id_alergia', rol: 'id_rol',
+            permiso: 'id_permiso', tipo_documento_empleado: 'id_tipo_documento',
+            categoria_producto: 'id_categoria_producto', estado_producto: 'id_estado_producto',
+            tipo_insumo: 'id_tipo_insumo', tipo_movimiento: 'id_tipo_movimiento',
+            estado_ingreso: 'id_estado_ingreso', tipo_servicio: 'id_tipo_servicio',
+            metodo_pago: 'id_metodo_pago', estado_venta: 'id_estado_venta',
+            estado_orden: 'id_estado_orden', tipo_reparacion: 'id_tipo_reparacion',
+            codigo_anillo: 'id_codigo_anillo', talla_anillo: 'id_talla_anillo',
+            color_piedra: 'id_color_piedra', material_anillo: 'id_material_anillo',
+            motivo_ajuste: 'id_motivo_ajuste'
+        };
+
         let tablaActual = null;
         let registrosActuales = [];
         let editandoId = null;
         let eliminandoId = null;
 
-        // ========== FUNCIONES DE UTILIDAD ==========
         function mostrarAlerta(m, t = 'success') {
             const toast = document.createElement('div');
             toast.className = 'toast-notification';
@@ -517,7 +520,6 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // ========== INICIALIZAR PESTAÑAS ==========
         function initTabs() {
             const container = document.getElementById('tabs-container');
             container.innerHTML = '';
@@ -531,13 +533,11 @@
             });
         }
 
-        // ========== SELECCIONAR TABLA ==========
         async function seleccionarTabla(tabla) {
             tablaActual = tabla;
             editandoId = null;
             eliminandoId = null;
             
-            // Actualizar tabs
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.closest('.tab-btn').classList.add('active');
             
@@ -548,7 +548,6 @@
             await cargarRegistros();
         }
 
-        // ========== CARGAR REGISTROS ==========
         async function cargarRegistros() {
             if (!tablaActual) return;
             
@@ -560,15 +559,14 @@
                     registrosActuales = data.data;
                     renderizarTabla();
                 } else {
-                    mostrarAlerta('Error al cargar datos', 'error');
+                    mostrarAlerta('Error al cargar datos: ' + (data.message || ''), 'error');
                 }
             } catch (e) {
                 console.error('Error:', e);
-                mostrarAlerta('Error de conexión', 'error');
+                mostrarAlerta('Error de conexión al cargar registros', 'error');
             }
         }
 
-        // ========== RENDERIZAR TABLA ==========
         function renderizarTabla() {
             const config = tablasConfig[tablaActual];
             const thead = document.getElementById('table-head');
@@ -580,16 +578,13 @@
                 return;
             }
             
-            // Obtener columnas del primer registro
             const columnas = Object.keys(registrosActuales[0]).filter(col => !col.startsWith('_'));
             
-            // Renderizar encabezados
             thead.innerHTML = '<tr>' + columnas.map(col => {
                 const etiqueta = col.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                 return `<th>${etiqueta}</th>`;
             }).join('') + '<th>Acciones</th></tr>';
             
-            // Renderizar filas
             tbody.innerHTML = registrosActuales.map(reg => {
                 const pk = config.pk;
                 const id = reg[pk];
@@ -611,30 +606,26 @@
             }).join('');
         }
 
-        // ========== ABRIR MODAL PARA CREAR ==========
         function abrirModalCrear() {
             editandoId = null;
-            document.getElementById('modal-title').textContent = 'Agregar Registro';
+            document.getElementById('modal-title').textContent = 'Agregar Registro - ' + tablasConfig[tablaActual].titulo;
             renderizarFormulario();
             document.getElementById('modal-crud').style.display = 'flex';
         }
 
-        // ========== ABRIR MODAL PARA EDITAR ==========
         function abrirModalEditar(id) {
             editandoId = id;
-            document.getElementById('modal-title').textContent = 'Editar Registro';
+            document.getElementById('modal-title').textContent = 'Editar Registro - ' + tablasConfig[tablaActual].titulo;
             const registro = registrosActuales.find(r => r[tablasConfig[tablaActual].pk] === id);
             renderizarFormulario(registro);
             document.getElementById('modal-crud').style.display = 'flex';
         }
 
-        // ========== ABRIR MODAL PARA ELIMINAR ==========
         function abrirModalEliminar(id) {
             eliminandoId = id;
             const config = tablasConfig[tablaActual];
             const registro = registrosActuales.find(r => r[config.pk] === id);
             
-            // Obtener el nombre del registro para mostrar en el mensaje
             let nombreRegistro = '';
             if (registro) {
                 if (registro.nombre) nombreRegistro = registro.nombre;
@@ -649,13 +640,11 @@
             document.getElementById('modal-eliminar').style.display = 'flex';
         }
 
-        // ========== CERRAR MODAL ELIMINAR ==========
         function cerrarModalEliminar() {
             document.getElementById('modal-eliminar').style.display = 'none';
             eliminandoId = null;
         }
 
-        // ========== CONFIRMAR ELIMINACIÓN ==========
         async function confirmarEliminacion() {
             if (!eliminandoId) return;
             
@@ -679,7 +668,6 @@
             }
         }
 
-        // ========== RENDERIZAR FORMULARIO ==========
         async function renderizarFormulario(registro = null) {
             const config = tablasConfig[tablaActual];
             const formFields = document.getElementById('form-fields');
@@ -693,13 +681,16 @@
                 let inputHTML = '';
                 
                 if (campo.tipo === 'select' && campo.endpoint) {
-                    // Cargar opciones del endpoint
-                    const response = await fetch(campo.endpoint);
-                    const opciones = await response.json();
-                    inputHTML = `<select id="campo-${campo.nombre}" ${campo.requerido ? 'required' : ''}>
-                        <option value="">Seleccionar...</option>
-                        ${opciones.map(op => `<option value="${op[campo.valorId]}" ${valor === op[campo.valorId] ? 'selected' : ''}>${op[campo.valorMostrar]}</option>`).join('')}
-                    </select>`;
+                    try {
+                        const response = await fetch(campo.endpoint);
+                        const opciones = await response.json();
+                        inputHTML = `<select id="campo-${campo.nombre}" ${campo.requerido ? 'required' : ''}>
+                            <option value="">Seleccionar...</option>
+                            ${opciones.map(op => `<option value="${op[campo.valorId]}" ${valor == op[campo.valorId] ? 'selected' : ''}>${op[campo.valorMostrar]}</option>`).join('')}
+                        </select>`;
+                    } catch(e) {
+                        inputHTML = `<select id="campo-${campo.nombre}" ${campo.requerido ? 'required' : ''}><option value="">Error al cargar</option></select>`;
+                    }
                 } else if (campo.tipo === 'textarea') {
                     inputHTML = `<textarea id="campo-${campo.nombre}" ${campo.requerido ? 'required' : ''} maxlength="${campo.maxlength || 250}" rows="3">${valor || ''}</textarea>`;
                 } else if (campo.tipo === 'number') {
@@ -716,12 +707,10 @@
             }
         }
 
-        // ========== CERRAR MODAL CRUD ==========
         function cerrarModal() {
             document.getElementById('modal-crud').style.display = 'none';
         }
 
-        // ========== MANEJAR ENVÍO DEL FORMULARIO ==========
         document.getElementById('form-crud').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -758,7 +747,6 @@
             }
         });
 
-        // ========== CERRAR MODALES AL HACER CLIC FUERA ==========
         document.getElementById('modal-crud').addEventListener('click', function(e) {
             if (e.target === this) cerrarModal();
         });
@@ -767,9 +755,7 @@
             if (e.target === this) cerrarModalEliminar();
         });
 
-        // ========== INICIALIZAR ==========
         function init() {
-            // Cargar datos del usuario
             const saved = localStorage.getItem('joyas_user');
             if (!saved || saved === 'undefined' || saved === 'null') {
                 window.location.href = '/index.html';
@@ -778,7 +764,7 @@
             
             try {
                 const user = JSON.parse(saved);
-                const nombreMostrar = user.nombreCompleto || ((user.nombres || '') + ' ' + (user.apellidos || '')).trim() || user.username || 'Usuario';
+                const nombreMostrar = user.nombreCompleto || user.username || 'Usuario';
                 document.getElementById('dashboard-user-name').textContent = nombreMostrar;
                 document.getElementById('dashboard-user-role').textContent = user.rol || 'Usuario';
                 
@@ -792,21 +778,17 @@
                 window.location.href = '/index.html';
             }
             
-            // Inicializar pestañas
             initTabs();
             
-            // Toggle menú móvil
             document.getElementById('menu-toggle')?.addEventListener('click', function() {
                 document.getElementById('sidebar').classList.toggle('active');
             });
             
-            // Logout
             document.getElementById('logout-btn')?.addEventListener('click', function() {
                 localStorage.removeItem('joyas_user');
                 window.location.href = '/index.html';
             });
             
-            // Submenús
             document.getElementById('inventario-header')?.addEventListener('click', function() {
                 this.classList.toggle('active');
                 document.getElementById('inventario-submenu').classList.toggle('active');

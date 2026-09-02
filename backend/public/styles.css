@@ -172,12 +172,24 @@ header .container {
                 url('https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=1600');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     min-height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 80px 20px;
+    padding: 90px 0;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.hero-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
 }
 
 .hero-content h2 {

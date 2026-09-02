@@ -6,6 +6,7 @@
     <title>Mensajes | Joyas Valentina</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="img/log.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -18,8 +19,9 @@
         body { font-family: 'Poppins', sans-serif; background: #f0f2f5; color: #333; }
         .dashboard-header { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: var(--navy); display: flex; justify-content: space-between; align-items: center; padding: 0 28px; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
         .header-left { display: flex; align-items: center; gap: 18px; }
-        .logo-container { display: flex; align-items: center; gap: 10px; }
-        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; box-shadow: 0 3px 12px rgba(212,175,55,0.35); }
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo-img { height: 40px; width: auto; object-fit: contain; }
+        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
         .dashboard-header h1 { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: var(--primary); }
         .header-right { display: flex; align-items: center; gap: 14px; }
         .user-profile { display: flex; align-items: center; gap: 10px; padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 40px; cursor: pointer; transition: var(--transition); border: 1px solid rgba(255,255,255,0.1); }
@@ -46,6 +48,7 @@
         .submenu.active { max-height: 500px; }
         .submenu-item { display: flex; align-items: center; padding: 9px 18px 9px 48px; color: var(--gray-light); text-decoration: none; gap: 8px; font-size: 0.82rem; transition: var(--transition); }
         .submenu-item:hover { background: #f0f0f0; color: var(--navy); }
+        .submenu-item.active { background: rgba(212,175,55,0.12); color: var(--navy); font-weight: 600; }
         .sidebar-footer { padding: 14px; border-top: 1px solid #eee; text-align: center; font-size: 0.7rem; color: var(--gray); }
         .menu-divider { height: 1px; background: linear-gradient(to right, transparent, #ddd, transparent); margin: 15px 20px; border: none; }
 
@@ -142,7 +145,14 @@
 <body>
     <div class="dashboard-container">
         <header class="dashboard-header">
-            <div class="header-left"><div class="logo-container"><div class="logo-placeholder"><i class="fas fa-gem"></i></div><h1>Joyas Valentina</h1></div><button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button></div>
+            <div class="header-left">
+                <div class="logo-container">
+                    <img src="img/log.png" alt="Joyas Valentina" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                    <div class="logo-placeholder" style="display: none;"><i class="fas fa-gem"></i></div>
+                    <h1>Joyas Valentina</h1>
+                </div>
+                <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+            </div>
             <div class="header-right">
                 <div class="user-profile" id="user-profile-btn" style="cursor:pointer;">
                     <img id="header-foto" class="foto-perfil" src="" alt="Foto" style="display:none;" onerror="this.style.display='none';document.getElementById('header-foto-placeholder').style.display='flex';">
@@ -170,6 +180,7 @@
                     <div class="menu-header" id="movimientos-menu"><i class="fas fa-exchange-alt"></i><span>Movimientos</span><i class="fas fa-chevron-down menu-arrow"></i></div>
                     <div class="submenu" id="movimientos-submenu">
                         <a href="inicio.html?modulo=ingreso-producto" class="submenu-item"><i class="fas fa-plus-circle"></i>Ingreso</a>
+                        <a href="inicio.html?modulo=historial-ingresos" class="submenu-item"><i class="fas fa-history"></i>Historial Ingresos</a>
                         <a href="ajustes.html" class="submenu-item"><i class="fas fa-balance-scale"></i>Ajuste</a>
                         <a href="cambios.html" class="submenu-item"><i class="fas fa-exchange-alt"></i>Cambios</a>
                     </div>
@@ -225,7 +236,6 @@
         </main>
     </div>
 
-    <!-- Modal Cerrar Sesión (mismo diseño que inicio.html) -->
     <div id="modal-cerrar-sesion" class="modal-overlay" style="display:none;">
         <div class="modal-dialog" style="max-width:420px;">
             <div class="modal-dialog-header">

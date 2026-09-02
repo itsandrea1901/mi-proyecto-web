@@ -6,6 +6,7 @@
     <title>Gestión de Clientes | Joyas Valentina</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="img/log.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -19,8 +20,9 @@
         body { font-family: 'Poppins', sans-serif; background: #f0f2f5; color: #333; overflow-x: hidden; }
         .dashboard-header { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: var(--navy); display: flex; justify-content: space-between; align-items: center; padding: 0 28px; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
         .header-left { display: flex; align-items: center; gap: 18px; }
-        .logo-container { display: flex; align-items: center; gap: 10px; }
-        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; box-shadow: 0 3px 12px rgba(212,175,55,0.35); }
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo-img { height: 40px; width: auto; object-fit: contain; }
+        .logo-placeholder { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #c9a830); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
         .dashboard-header h1 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 600; color: var(--primary); }
         .header-right { display: flex; align-items: center; gap: 14px; }
         .user-profile { display: flex; align-items: center; gap: 10px; padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 40px; cursor: pointer; transition: var(--transition); border: 1px solid rgba(255,255,255,0.1); }
@@ -56,7 +58,7 @@
         
         .card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; }
         .card-body { padding: 24px; }
-        .card-header { padding: 16px 24px; border-bottom: 2px solid rgba(212,175,55,0.15); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .card-header { padding: 16px 24px; border-bottom: 2px solid rgba(212,175,55,0.15); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; background: linear-gradient(135deg, #ffffff 0%, #fef9e6 100%); }
         .card-header h4 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.4rem; display: flex; align-items: center; gap: 8px; }
         .card-header h4 i { color: var(--primary); }
         
@@ -105,9 +107,9 @@
         .toast-notification { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 10px; display: flex; align-items: center; gap: 8px; z-index: 9999; animation: slideInRight 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; cursor: pointer; }
         
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.3s ease; }
-        .modal-dialog { background: white; border-radius: 20px; padding: 35px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease; text-align: center; }
+        .modal-dialog { background: white; border-radius: 20px; padding: 35px; width: 90%; max-width: 600px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease; text-align: center; max-height: 90vh; overflow-y: auto; }
         .modal-dialog-header { margin-bottom: 25px; }
-        .modal-dialog-header i { font-size: 3.5rem; margin-bottom: 15px; display: block; }
+        .modal-dialog-header i { font-size: 3rem; margin-bottom: 15px; display: block; }
         .modal-dialog-header h3 { font-size: 1.5rem; color: #333; margin-bottom: 10px; font-family: 'Playfair Display', serif; font-weight: 600; }
         .modal-dialog-header p { color: #666; font-size: 0.95rem; line-height: 1.5; }
         .modal-dialog-body { text-align: left; }
@@ -129,7 +131,14 @@
 <body>
     <div class="dashboard-container">
         <header class="dashboard-header">
-            <div class="header-left"><div class="logo-container"><div class="logo-placeholder"><i class="fas fa-gem"></i></div><h1>Joyas Valentina</h1></div><button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button></div>
+            <div class="header-left">
+                <div class="logo-container">
+                    <img src="img/log.png" alt="Joyas Valentina" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                    <div class="logo-placeholder" style="display: none;"><i class="fas fa-gem"></i></div>
+                    <h1>Joyas Valentina</h1>
+                </div>
+                <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+            </div>
             <div class="header-right">
                 <div class="user-profile" id="user-profile-btn" style="cursor:pointer;" title="Ver perfil">
                     <div class="profile-image"><img id="header-foto" class="foto-perfil" src="" alt="Foto" style="display:none;" onerror="this.style.display='none';document.getElementById('header-foto-placeholder').style.display='flex';"><div id="header-foto-placeholder" class="foto-perfil-placeholder"><i class="fas fa-user-circle"></i></div></div>
@@ -156,6 +165,7 @@
                     <div class="menu-header" id="movimientos-menu"><i class="fas fa-exchange-alt"></i><span>Movimientos</span><i class="fas fa-chevron-down menu-arrow"></i></div>
                     <div class="submenu" id="movimientos-submenu">
                         <a href="inicio.html?modulo=ingreso-producto" class="submenu-item"><i class="fas fa-plus-circle"></i>Ingreso</a>
+                        <a href="inicio.html?modulo=historial-ingresos" class="submenu-item"><i class="fas fa-history"></i>Historial Ingresos</a>
                         <a href="ajustes.html" class="submenu-item"><i class="fas fa-balance-scale"></i>Ajuste</a>
                         <a href="cambios.html" class="submenu-item"><i class="fas fa-exchange-alt"></i>Cambios</a>
                     </div>
@@ -175,7 +185,6 @@
         </aside>
         
         <main class="main-content">
-            <!-- TARJETA ÚNICA CON TODO EL CONTENIDO -->
             <div class="card">
                 <div class="card-header">
                     <h4><i class="fas fa-user-tie"></i> Gestión de Clientes</h4>
@@ -183,7 +192,6 @@
                 </div>
                 <div class="card-body">
                     
-                    <!-- SECCIÓN: CLIENTE -->
                     <div class="search-box">
                         <input type="text" id="buscar-cliente" placeholder="Buscar por nombre, DPI, NIT..." oninput="filtrarClientes()">
                         <select id="filtro-estado" onchange="filtrarClientes()">
@@ -193,8 +201,6 @@
                         </select>
                     </div>
                 
-                    
-                    <!-- SECCIÓN: LISTADO DE CLIENTES -->
                     <div class="section-title"><i class="fas fa-list"></i> Listado de Clientes <span style="color:var(--gray);font-size:0.8rem;font-family:'Poppins',sans-serif;">(Total: <strong id="total-clientes">0</strong>)</span></div>
                     <div class="table-responsive">
                         <table class="inventory-table">
@@ -237,6 +243,8 @@
     <script>
         let currentUser = null;
         let todosLosClientes = [];
+        let departamentos = [];
+        let municipios = [];
 
         // ========== UTILIDADES ==========
         function toast(m, t = 'success') {
@@ -257,7 +265,7 @@
             const modal = document.createElement('div');
             modal.className = 'modal-overlay';
             modal.innerHTML = `
-                <div class="modal-dialog" onclick="event.stopPropagation()">
+                <div class="modal-dialog" onclick="event.stopPropagation()" style="max-width:400px;">
                     <div class="modal-dialog-header">
                         <i class="fas ${i}" style="color:${cb};"></i>
                         <h3>${t}</h3>
@@ -284,7 +292,7 @@
                 currentUser = JSON.parse(s);
                 if (!currentUser || !currentUser.id) throw new Error('Sesión inválida');
                 
-                const nombreMostrar = currentUser.nombreCompleto || ((currentUser.nombres || '') + ' ' + (currentUser.apellidos || '')).trim() || currentUser.username || 'Usuario';
+                const nombreMostrar = currentUser.nombreCompleto || currentUser.username || 'Usuario';
                 document.getElementById('dashboard-user-name').textContent = nombreMostrar;
                 document.getElementById('dashboard-user-role').textContent = currentUser.rol || 'Usuario';
                 
@@ -330,6 +338,16 @@
                 if (menuMantenimiento) menuMantenimiento.style.display = 'none';
                 if (movimientosHeader) movimientosHeader.style.display = 'none';
                 if (btnNuevoCliente) btnNuevoCliente.style.display = 'none';
+            }
+        }
+
+        // ========== CARGAR CATÁLOGOS DESDE BD ==========
+        async function cargarCatalogos() {
+            try {
+                const r = await fetch('/api/departamentos');
+                departamentos = await r.json();
+            } catch(e) {
+                departamentos = [];
             }
         }
 
@@ -436,6 +454,8 @@
 
         // ========== FORMULARIO NUEVO/EDITAR ==========
         async function mostrarFormCliente(id = null) {
+            if (!departamentos.length) await cargarCatalogos();
+            
             const esEdicion = !!id;
             let c = { id_cliente: '', primer_nombre: '', segundo_nombre: '', primer_apellido: '', segundo_apellido: '', dpi: '', nit: '', activo: 1 };
             
@@ -536,6 +556,7 @@
         // ========== INICIAR ==========
         initHeader();
         cargarClientes();
+        cargarCatalogos();
         
         console.log('clientes.html cargado correctamente');
     </script>

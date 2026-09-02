@@ -19,15 +19,15 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap"
         rel="stylesheet">
 
-    <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'%3E%3Cpath d='M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2Z'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" href="img/log.png">
 </head>
 
 <body>
     <header>
         <div class="container">
             <div class="logo">
-                <h1><i class="fas fa-gem" aria-hidden="true"></i> Joyas Valentina</h1>
+                <img src="img/log.png" alt="Joyas Valentina" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex';">
+                <h1 class="logo-text">Joyas Valentina</h1>
             </div>
 
             <nav class="main-nav" aria-label="Navegación principal">
@@ -277,7 +277,7 @@
         <div class="container">
             <div class="footer-columns">
                 <div class="footer-col">
-                    <h3><i class="fas fa-gem" aria-hidden="true"></i> Joyas Valentina</h3>
+                    <h3><img src="img/log.png" alt="Joyas Valentina" style="height: 35px; width: auto; vertical-align: middle;"> Joyas Valentina</h3>
                     <p>Creando momentos inolvidables desde 2019.</p>
                 </div>
                 <div class="footer-col">
@@ -306,6 +306,31 @@
             </div>
         </div>
     </footer>
+
+    <!-- Modal de Carga de Login -->
+    <div id="modal-cargando" class="modal-overlay" style="display: none;">
+        <div class="modal-dialog modal-cargando-dialog">
+            <div class="modal-cargando-header">
+                <div class="cargando-logo">
+                    <img src="img/log.png" alt="Logo Joyas Valentina" class="cargando-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                    <i class="fas fa-gem cargando-logo-fallback" style="display: none;"></i>
+                </div>
+                <h3>¡Bienvenido!</h3>
+                <p id="cargando-nombre-usuario">Verificando credenciales...</p>
+            </div>
+            <div class="modal-cargando-body">
+                <div class="cargando-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <div class="cargando-texto" id="cargando-texto">
+                    Iniciando sesión...
+                </div>
+                <div class="cargando-barra">
+                    <div class="cargando-barra-progreso" id="cargando-barra-progreso"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal de Recuperación de Contraseña -->
     <div id="modal-recuperacion" class="modal-overlay" style="display: none;">
@@ -476,6 +501,146 @@
             }
         }
         
+        /* ========== LOGO DE EMPRESA ========== */
+        .logo-img {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-text {
+            font-size: 1.6rem;
+        }
+        
+        /* ========== MODAL DE CARGA ========== */
+        .modal-cargando-dialog {
+            max-width: 380px;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff 0%, #fef9e6 100%);
+            border-radius: 24px;
+            padding: 40px 30px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+        }
+        
+        .modal-cargando-header {
+            margin-bottom: 30px;
+        }
+        
+        .cargando-logo {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            animation: pulse-logo 1.5s infinite;
+            overflow: hidden;
+            border: 3px solid var(--primary);
+        }
+        
+        .cargando-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .cargando-logo-fallback {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        @keyframes pulse-logo {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 35px rgba(212, 175, 55, 0.6); }
+        }
+        
+        .modal-cargando-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+        
+        .modal-cargando-header p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        #cargando-nombre-usuario {
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .modal-cargando-body {
+            padding: 0 10px;
+        }
+        
+        .cargando-spinner {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .cargando-texto {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            min-height: 24px;
+        }
+        
+        .cargando-barra {
+            width: 100%;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .cargando-barra-progreso {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #c9a830, var(--primary));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+            background-size: 200% 100%;
+            animation: barra-brillo 2s infinite;
+        }
+        
+        @keyframes barra-brillo {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        /* Animación de entrada */
+        .modal-cargando-dialog {
+            animation: slideUpCargando 0.4s ease;
+        }
+        
+        @keyframes slideUpCargando {
+            from {
+                transform: translateY(40px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
         @media (max-width: 768px) {
             .modal-dialog {
                 padding: 20px;
@@ -483,6 +648,23 @@
             }
             
             .modal-dialog-header h3 {
+                font-size: 1.3rem;
+            }
+            
+            .modal-cargando-dialog {
+                padding: 30px 20px;
+            }
+            
+            .cargando-logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .logo-img {
+                height: 35px;
+            }
+            
+            .logo-text {
                 font-size: 1.3rem;
             }
         }

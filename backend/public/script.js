@@ -81,6 +81,47 @@
     
     function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
     
+    // ========== MODAL DE CARGA DE LOGIN ==========
+    function mostrarModalCargando(email) {
+        const modal = document.getElementById('modal-cargando');
+        if (!modal) return;
+        
+        // Resetear animaciones
+        const nombreUsuarioEl = document.getElementById('cargando-nombre-usuario');
+        const textoEl = document.getElementById('cargando-texto');
+        const barraEl = document.getElementById('cargando-barra-progreso');
+        
+        if (nombreUsuarioEl) nombreUsuarioEl.textContent = 'Verificando credenciales...';
+        if (textoEl) textoEl.textContent = 'Iniciando sesión...';
+        if (barraEl) barraEl.style.width = '0%';
+        
+        // Mostrar modal
+        modal.style.display = 'flex';
+        
+        // Animar barra de progreso
+        setTimeout(() => {
+            if (barraEl) barraEl.style.width = '40%';
+            if (textoEl) textoEl.textContent = 'Verificando credenciales...';
+        }, 300);
+        
+        setTimeout(() => {
+            if (barraEl) barraEl.style.width = '70%';
+            if (textoEl) textoEl.textContent = 'Cargando información...';
+        }, 800);
+        
+        setTimeout(() => {
+            if (barraEl) barraEl.style.width = '90%';
+            if (textoEl) textoEl.textContent = 'Preparando tu panel...';
+        }, 1300);
+    }
+    
+    function cerrarModalCargando() {
+        const modal = document.getElementById('modal-cargando');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
     // ========== TOGGLE PASSWORD ==========
     function initTogglePassword() {
         if (!togglePassword || !document.getElementById('login-password')) return;
@@ -360,12 +401,25 @@
     function initLoginForm() {
         const form = document.getElementById('login-form');
         if (!form) return;
+        
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const email = document.getElementById('login-email')?.value.trim();
             const password = document.getElementById('login-password')?.value;
-            if (!email || !isValidEmail(email)) { showToast('Email válido requerido', 'error'); return; }
-            if (!password || password.length < 6) { showToast('Contraseña mínimo 6 caracteres', 'error'); return; }
+            
+            if (!email || !isValidEmail(email)) { 
+                showToast('Email válido requerido', 'error'); 
+                return; 
+            }
+            if (!password || password.length < 6) { 
+                showToast('Contraseña mínimo 6 caracteres', 'error'); 
+                return; 
+            }
+            
+            // Mostrar modal de carga
+            mostrarModalCargando(email);
+            
             try {
                 const res = await fetch('/api/login', { 
                     method:'POST', 
@@ -373,18 +427,37 @@
                     body:JSON.stringify({email, password}) 
                 });
                 const data = await res.json();
+                
                 if (data.success) {
                     currentUser = data.user;
                     localStorage.setItem('joyas_user', JSON.stringify(currentUser));
                     updateAuthUI();
-                    showToast(`¡Bienvenido, ${data.user.nombreCompleto || data.user.nombres || data.user.username}!`, 'success');
-                    form.reset();
-                    setTimeout(() => { window.location.href = '/inicio.html'; }, 800);
+                    
+                    // Actualizar modal de carga con el nombre del usuario
+                    const nombreUsuario = data.user.nombreCompleto || data.user.nombres || data.user.username;
+                    const nombreUsuarioEl = document.getElementById('cargando-nombre-usuario');
+                    const textoEl = document.getElementById('cargando-texto');
+                    const barraEl = document.getElementById('cargando-barra-progreso');
+                    
+                    if (nombreUsuarioEl) nombreUsuarioEl.textContent = nombreUsuario;
+                    if (textoEl) textoEl.textContent = '¡Credenciales verificadas! Cargando tu panel...';
+                    if (barraEl) barraEl.style.width = '100%';
+                    
+                    // Esperar un momento para que se vea la animación
+                    setTimeout(() => {
+                        showToast(`¡Bienvenido, ${nombreUsuario}!`, 'success');
+                        form.reset();
+                        window.location.href = '/inicio.html';
+                    }, 1500);
+                    
                 } else {
+                    // Error de credenciales
+                    cerrarModalCargando();
                     showToast(data.message || 'Credenciales incorrectas', 'error');
                 }
             } catch (error) { 
                 console.error('Error login:', error);
+                cerrarModalCargando();
                 showToast('Error de conexión', 'error'); 
             }
         });
@@ -427,6 +500,13 @@
             const modal = document.getElementById('modal-recuperacion');
             if (modal && modal.style.display === 'flex' && e.target === modal) {
                 cerrarModalRecuperacion();
+            }
+            
+            // Cerrar modal de carga si se hace clic fuera (no recomendado, pero por seguridad)
+            const modalCargando = document.getElementById('modal-cargando');
+            if (modalCargando && modalCargando.style.display === 'flex' && e.target === modalCargando) {
+                // No cerramos el modal de carga al hacer clic fuera
+                // para evitar interrupciones durante el login
             }
         });
         
